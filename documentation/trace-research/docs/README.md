@@ -15,16 +15,6 @@ This folder contains the current TRACE research packet and supporting materials.
 
 - `trace-methods-and-evaluation-plan.md`
 
-### `planning`
-
-- `trace-next-steps-and-supporting-docs.md`
-- `trace-meeting-brief.md`
-
-### `applications`
-
-- `wsuv-fellowship-application-responses.md`
-- `wsuv-mentor-review-email-draft.md`
-
 ### `archive`
 
 - `legacy-sebai-project-roadmap.md`
@@ -36,7 +26,6 @@ For mentor meetings and research discussions, the primary packet is:
 1. `abstracts/trace-v1-project-abstract.md`
 2. `abstracts/trace-one-page-summary.md`
 3. `methods/trace-methods-and-evaluation-plan.md`
-4. `planning/trace-next-steps-and-supporting-docs.md`
 
 ## Notes
 
