@@ -5,7 +5,7 @@ It scans uploaded source documents, extracts claims from a response, retrieves
 candidate evidence, and produces a structured report showing which claims appear
 explicitly supported, inferred, or unsupported.
 
-This repository now contains both:
+This repository contains both:
 
 - a Vite + React frontend for the demo interface
 - a FastAPI + Python backend for document scanning, claim extraction,
