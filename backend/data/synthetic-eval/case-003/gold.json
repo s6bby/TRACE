@@ -1,0 +1,24 @@
+{
+  "case_id": "case-003",
+  "claims": [
+    {
+      "text": "Reading support is 30 minutes daily.",
+      "label": "explicit",
+      "evidence_substrings": [
+        "Reading support: 30 minutes daily."
+      ]
+    },
+    {
+      "text": "The family requested weekly progress updates.",
+      "label": "explicit",
+      "evidence_substrings": [
+        "The family requested weekly progress updates."
+      ]
+    },
+    {
+      "text": "Math intervention occurs every school day.",
+      "label": "unsupported",
+      "evidence_substrings": []
+    }
+  ]
+}

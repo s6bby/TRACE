@@ -1,0 +1,74 @@
+TRACE Educational Review License
+Version 1.0
+
+Copyright (c) 2026 Sebastian Andrades
+All rights reserved.
+
+This repository is made available for limited educational and evaluative review
+only. It is not released under an open-source license.
+
+1. Limited Permission
+
+Subject to the terms below, you may:
+
+- view the source code
+- clone or fork the repository through GitHub or similar tooling
+- make local copies and local modifications solely for your own personal,
+  non-commercial, private educational review, research review, or internal
+  evaluation of how the code works
+
+2. No Production or Public Use
+
+Without prior written permission from the copyright holder, you may not:
+
+- use the software in production
+- deploy, host, publish, or operate the software as a service
+- use the software to provide services to third parties
+- distribute, sublicense, sell, lease, or otherwise commercialize the software
+- use the software in any paid product, paid service, or commercial workflow
+- redistribute modified or unmodified copies of the software
+- create or share derivative works for public use
+- remove or alter copyright, attribution, or license notices
+
+3. Commercial Use Prohibited
+
+Any commercial use is strictly prohibited without prior written permission from
+the copyright holder. "Commercial use" includes any use intended for commercial
+advantage, revenue generation, client work, internal business operations,
+product development, hosted offerings, or integration into a commercial system.
+
+4. No Trademark or Patent Rights
+
+This license does not grant any trademark rights, patent rights, or any other
+intellectual property rights except the limited review rights expressly stated
+above.
+
+5. Ownership
+
+The software is licensed, not sold. All rights not expressly granted in this
+license are reserved by the copyright holder.
+
+6. Termination
+
+Any violation of these terms automatically terminates your permission to use,
+copy, access, or possess the software under this license. Upon termination, you
+must stop using the software and destroy all copies in your possession or
+control, except where retention is required by law.
+
+7. No Warranty
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE, TITLE, NON-INFRINGEMENT, ACCURACY, OR RELIABILITY.
+
+8. Limitation of Liability
+
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE COPYRIGHT HOLDER SHALL NOT BE
+LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OF OR OTHER DEALINGS IN THE SOFTWARE.
+
+9. Permission Requests
+
+Requests for commercial, production, redistribution, derivative, or deployment
+rights must be approved in writing by the copyright holder before such use.

@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "trace-backend"
+version = "0.1.0"
+description = "Backend ingestion and scanning pipeline for TRACE."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Sebastian Andrades" }]
+dependencies = [
+  "charset-normalizer>=3.4.0",
+  "fastapi>=0.118.0",
+  "numpy>=2.0.0",
+  "pdfplumber>=0.11.0",
+  "pydantic>=2.11.0",
+  "python-multipart>=0.0.20",
+  "pymupdf>=1.26.0",
+  "python-docx>=1.1.0",
+  "rapidocr-onnxruntime>=1.2.0",
+  "uvicorn>=0.37.0"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0.0"
+]
+
+[project.scripts]
+trace-scan = "trace_backend.cli:main"
+trace-claims = "trace_backend.claims.cli:main"
+trace-analyze = "trace_backend.pipeline.cli:main"
+trace-benchmark = "trace_backend.benchmark.cli:main"
+trace-api = "trace_backend.api.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

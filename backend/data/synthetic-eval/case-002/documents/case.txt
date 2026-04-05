@@ -1,0 +1,5 @@
+Behavior Notes
+
+Visual supports are used during transitions.
+Breaks are offered when frustration increases.
+Staff provide check-ins at the start of math class.

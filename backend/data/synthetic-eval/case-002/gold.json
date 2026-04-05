@@ -1,0 +1,24 @@
+{
+  "case_id": "case-002",
+  "claims": [
+    {
+      "text": "Visual supports are used during transitions.",
+      "label": "explicit",
+      "evidence_substrings": [
+        "Visual supports are used during transitions."
+      ]
+    },
+    {
+      "text": "The student may need breaks when frustration rises.",
+      "label": "inferred",
+      "evidence_substrings": [
+        "Breaks are offered when frustration increases."
+      ]
+    },
+    {
+      "text": "The student receives speech therapy.",
+      "label": "unsupported",
+      "evidence_substrings": []
+    }
+  ]
+}

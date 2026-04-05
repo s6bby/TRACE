@@ -1,0 +1,24 @@
+{
+  "case_id": "case-001",
+  "claims": [
+    {
+      "text": "The student receives daily reading intervention.",
+      "label": "explicit",
+      "evidence_substrings": [
+        "daily reading intervention in a small group"
+      ]
+    },
+    {
+      "text": "Transportation is provided by bus.",
+      "label": "explicit",
+      "evidence_substrings": [
+        "Transportation is provided by bus."
+      ]
+    },
+    {
+      "text": "Extended time is available for tests.",
+      "label": "unsupported",
+      "evidence_substrings": []
+    }
+  ]
+}
