@@ -1,0 +1,19 @@
+# python
+__pycache__/
+*.pyc
+
+# system
+.DS_Store
+Thumbs.db
+
+# prevent restricted case documents
+study_pipeline/cases/**/*.docx
+study_pipeline/cases/**/*.pdf
+study_pipeline/cases/**/*.txt
+
+# lm studio model files
+*.gguf
+
+# research notes not for repo
+misc/
+papers/

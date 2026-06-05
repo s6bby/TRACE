@@ -1,0 +1,41 @@
+# Local Python environments
+.venv/
+venv/
+env/
+
+# Python cache and test cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Local secrets and machine-specific settings
+.env
+.env.*
+
+# OS/editor clutter
+.DS_Store
+Thumbs.db
+
+# Frontend dependencies and generated build output
+node_modules/
+surca_research_pipeline/demo/node_modules/
+surca_research_pipeline/demo/dist/
+
+# Project paperwork and private planning material
+documents/
+docs/
+literatureReview/
+surca_research_pipeline/development_notes.md
+
+# Licensed forms/templates and generated office documents
+*.docx
+*.pdf
+
+# Private or high-volume run outputs
+surca_research_pipeline/study_pipeline/outputs/
+
+# Keep the public-safe extracted text folder tracked
+!surca_research_pipeline/study_pipeline/plain_text_cases/
+!surca_research_pipeline/study_pipeline/plain_text_cases/*.txt
+!surca_research_pipeline/study_pipeline/plain_text_cases/README.md

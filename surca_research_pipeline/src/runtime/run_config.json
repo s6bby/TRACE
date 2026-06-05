@@ -1,0 +1,11 @@
+{
+  "python": ".\\.venv\\Scripts\\python.exe",
+  "requirements": ".\\requirements.txt",
+  "base_dir": ".\\surca_research_pipeline\\study_pipeline",
+  "base_url": "http://127.0.0.1:1234",
+  "model": "YOUR_MODEL_ID",
+  "run_cases": "CASE001,CASE002,CASE003,CASE004,CASE005,CASE006,CASE007,CASE008,CASE009,CASE010",
+  "run_id": "trace_ed_run_01",
+  "npm_cmd": "C:\\Program Files\\nodejs\\npm.cmd",
+  "demo_dir": ".\\surca_research_pipeline\\demo"
+}

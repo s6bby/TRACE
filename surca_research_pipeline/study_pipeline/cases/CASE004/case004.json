@@ -1,0 +1,42 @@
+{
+    "case_id": "CASE004",
+    "taxonomy_version": "v1.0",
+    "A_behavior_presence": {
+        "aggression_present": true,
+        "self_injury_present": false,
+        "property_destruction_present": true,
+        "elopement_present": false,
+        "task_refusal_present": true,
+        "verbal_disruption_present": true
+    },
+    "B_behavior_measurement": {
+        "behavior_frequency_numeric_present": true,
+        "behavior_duration_numeric_present": true,
+        "baseline_data_present": true
+    },
+    "C_function_statements": {
+        "function_escape_stated": true,
+        "function_attention_stated": true,
+        "function_tangible_stated": false,
+        "function_sensory_stated": false
+    },
+    "D_services_and_supports": {
+        "bip_exists": true,
+        "fba_completed_stated": true,
+        "speech_services_present": false,
+        "ot_services_present": true
+    },
+    "E_accommodations": {
+        "visual_schedule_accommodation": true,
+        "break_access_accommodation": true,
+        "reduced_workload_accommodation": false
+    },
+    "F_safety_risk": {
+        "safety_plan_present": false,
+        "restraint_or_isolation_flagged": false
+    },
+    "G_staffing_ratio": {
+        "ratio_1to1_explicitly_stated": false,
+        "ratio_2to1_explicitly_stated": false
+    }
+}

@@ -1,0 +1,23 @@
+# TRACE-FELLOWSHIP workspace dependencies
+#
+# Derived from:
+# - TRACE-main/backend/pyproject.toml
+# - TRACE-main/documentation/trace-research/pyproject.toml
+# - surca_research_pipeline/RESEARCH/special_ed_pipeline_hardened.py
+
+charset-normalizer>=3.4.0
+fastapi>=0.118.0
+numpy>=2.0.0
+pdfplumber>=0.11.0
+pydantic>=2.11.0
+pymupdf>=1.26.0
+pypdf>=4.0.0
+python-docx>=1.1.0
+python-multipart>=0.0.20
+rapidocr-onnxruntime>=1.2.0
+reportlab>=4.0.0
+requests>=2.32.0
+uvicorn>=0.37.0
+
+# Dev and testing
+pytest>=8.0.0
