@@ -1028,14 +1028,27 @@ def load_or_build_claim_payload(
     return payload
 
 
+def public_run_path(run_dir: Path) -> str:
+    project_root = Path(__file__).resolve().parents[2]
+    try:
+        return run_dir.resolve().relative_to(project_root).as_posix()
+    except ValueError:
+        return run_dir.name
+
+
 def build_demo_run_payload(run_dir: Path) -> Dict[str, Any]:
     summary_rows = load_csv_rows(run_dir / "results.csv")
     field_rows = load_csv_rows(run_dir / "field_results.csv")
     metrics = load_json_file(run_dir / REPORT_JSON_NAME) or build_run_metrics(run_dir)
+    original_run_dir = str(run_dir.resolve())
+    safe_run_dir = public_run_path(run_dir)
+    metrics = dict(metrics)
+    metrics["run_dir"] = safe_run_dir
     summary_markdown = ""
     summary_md_path = run_dir / REPORT_MARKDOWN_NAME
     if summary_md_path.exists():
         summary_markdown = summary_md_path.read_text(encoding="utf-8")
+        summary_markdown = summary_markdown.replace(original_run_dir, safe_run_dir)
 
     field_lookup: Dict[Tuple[str, str, str, str], List[Dict[str, Any]]] = {}
     for row in field_rows:

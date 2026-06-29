@@ -1,11 +1,11 @@
 {
-  "generated_at_utc": "2026-05-27T01:11:38.956803",
+  "generated_at_utc": "2026-06-29T03:53:37.612318",
   "runs": [
     {
       "run_id": "GEMMA_RUN",
       "summary": {
         "run_id": "GEMMA_RUN",
-        "run_dir": "C:\\Users\\ovycl\\OneDrive\\Desktop\\TRACE-FELLOWSHIP\\surca_research_pipeline\\study_pipeline\\outputs\\runs\\GEMMA_RUN",
+        "run_dir": "study_pipeline/outputs/runs/GEMMA_RUN",
         "case_ids": [
           "CASE001",
           "CASE002",
@@ -174,7 +174,7 @@
           }
         ]
       },
-      "summary_markdown": "# TRACE-ED Run Summary: GEMMA_RUN\n\n- Run folder: `C:\\Users\\ovycl\\OneDrive\\Desktop\\TRACE-FELLOWSHIP\\surca_research_pipeline\\study_pipeline\\outputs\\runs\\GEMMA_RUN`\n- Total evaluations: `30`\n- Overall average accuracy: `74.96%`\n- Abstention detected in `0` response(s)\n\n## Accuracy by Prompt\n\n- `prompt_1` (Broad teacher summary): `62.50%`\n- `prompt_2` (Behavior and supports summary): `67.37%`\n- `prompt_3` (Support level recommendation): `95.00%`\n\n## Accuracy by Model\n\n- `google/gemma-3-4b`: `74.96%`\n\n## Most Missed Fields\n\n- `OT services present`: `19` misses\n- `FBA completed stated`: `16` misses\n- `Break access accommodation`: `15` misses\n- `Verbal disruption present`: `13` misses\n- `Task refusal present`: `12` misses\n- `Visual schedule accommodation`: `11` misses\n- `Reduced workload accommodation`: `10` misses\n- `Behavior frequency data present`: `9` misses\n- `Escape function stated`: `9` misses\n- `Baseline data present`: `8` misses\n\n## Best Runs\n\n- `CASE001` | `google/gemma-3-4b` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE002` | `google/gemma-3-4b` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE003` | `google/gemma-3-4b` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE004` | `google/gemma-3-4b` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE005` | `google/gemma-3-4b` | `prompt_3`: `2/2` (`100.00%`)\n\n## Weakest Runs\n\n- `CASE008` | `google/gemma-3-4b` | `prompt_3`: `1/2` (`50.00%`)\n- `CASE005` | `google/gemma-3-4b` | `prompt_2`: `10/19` (`52.63%`)\n- `CASE009` | `google/gemma-3-4b` | `prompt_2`: `10/19` (`52.63%`)\n- `CASE002` | `google/gemma-3-4b` | `prompt_1`: `13/24` (`54.17%`)\n- `CASE005` | `google/gemma-3-4b` | `prompt_1`: `13/24` (`54.17%`)\n",
+      "summary_markdown": "# TRACE-ED Run Summary: GEMMA_RUN\n\n- Run folder: `study_pipeline/outputs/runs/GEMMA_RUN`\n- Total evaluations: `30`\n- Overall average accuracy: `74.96%`\n- Abstention detected in `0` response(s)\n\n## Accuracy by Prompt\n\n- `prompt_1` (Broad teacher summary): `62.50%`\n- `prompt_2` (Behavior and supports summary): `67.37%`\n- `prompt_3` (Support level recommendation): `95.00%`\n\n## Accuracy by Model\n\n- `google/gemma-3-4b`: `74.96%`\n\n## Most Missed Fields\n\n- `OT services present`: `19` misses\n- `FBA completed stated`: `16` misses\n- `Break access accommodation`: `15` misses\n- `Verbal disruption present`: `13` misses\n- `Task refusal present`: `12` misses\n- `Visual schedule accommodation`: `11` misses\n- `Reduced workload accommodation`: `10` misses\n- `Behavior frequency data present`: `9` misses\n- `Escape function stated`: `9` misses\n- `Baseline data present`: `8` misses\n\n## Best Runs\n\n- `CASE001` | `google/gemma-3-4b` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE002` | `google/gemma-3-4b` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE003` | `google/gemma-3-4b` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE004` | `google/gemma-3-4b` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE005` | `google/gemma-3-4b` | `prompt_3`: `2/2` (`100.00%`)\n\n## Weakest Runs\n\n- `CASE008` | `google/gemma-3-4b` | `prompt_3`: `1/2` (`50.00%`)\n- `CASE005` | `google/gemma-3-4b` | `prompt_2`: `10/19` (`52.63%`)\n- `CASE009` | `google/gemma-3-4b` | `prompt_2`: `10/19` (`52.63%`)\n- `CASE002` | `google/gemma-3-4b` | `prompt_1`: `13/24` (`54.17%`)\n- `CASE005` | `google/gemma-3-4b` | `prompt_1`: `13/24` (`54.17%`)\n",
       "results": [
         {
           "result_id": "CASE001__google_gemma-3-4b__prompt_1__2026-05-26T23:04:00.348621",
@@ -17823,7 +17823,7 @@
       "run_id": "GPTOSS_RUN",
       "summary": {
         "run_id": "GPTOSS_RUN",
-        "run_dir": "C:\\Users\\ovycl\\OneDrive\\Desktop\\TRACE-FELLOWSHIP\\surca_research_pipeline\\study_pipeline\\outputs\\runs\\GPTOSS_RUN",
+        "run_dir": "study_pipeline/outputs/runs/GPTOSS_RUN",
         "case_ids": [
           "CASE001",
           "CASE002",
@@ -17992,7 +17992,7 @@
           }
         ]
       },
-      "summary_markdown": "# TRACE-ED Run Summary: GPTOSS_RUN\n\n- Run folder: `C:\\Users\\ovycl\\OneDrive\\Desktop\\TRACE-FELLOWSHIP\\surca_research_pipeline\\study_pipeline\\outputs\\runs\\GPTOSS_RUN`\n- Total evaluations: `30`\n- Overall average accuracy: `78.21%`\n- Abstention detected in `2` response(s)\n\n## Accuracy by Prompt\n\n- `prompt_1` (Broad teacher summary): `70.42%`\n- `prompt_2` (Behavior and supports summary): `74.21%`\n- `prompt_3` (Support level recommendation): `90.00%`\n\n## Accuracy by Model\n\n- `openai/gpt-oss-20b`: `78.21%`\n\n## Most Missed Fields\n\n- `FBA completed stated`: `16` misses\n- `Break access accommodation`: `15` misses\n- `Verbal disruption present`: `13` misses\n- `OT services present`: `12` misses\n- `Reduced workload accommodation`: `10` misses\n- `Task refusal present`: `8` misses\n- `Behavior frequency data present`: `7` misses\n- `Sensory function stated`: `7` misses\n- `Baseline data present`: `5` misses\n- `Visual schedule accommodation`: `5` misses\n\n## Best Runs\n\n- `CASE001` | `openai/gpt-oss-20b` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE002` | `openai/gpt-oss-20b` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE003` | `openai/gpt-oss-20b` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE005` | `openai/gpt-oss-20b` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE007` | `openai/gpt-oss-20b` | `prompt_3`: `2/2` (`100.00%`)\n\n## Weakest Runs\n\n- `CASE004` | `openai/gpt-oss-20b` | `prompt_3`: `1/2` (`50.00%`)\n- `CASE006` | `openai/gpt-oss-20b` | `prompt_3`: `1/2` (`50.00%`)\n- `CASE005` | `openai/gpt-oss-20b` | `prompt_2`: `10/19` (`52.63%`)\n- `CASE005` | `openai/gpt-oss-20b` | `prompt_1`: `13/24` (`54.17%`)\n- `CASE009` | `openai/gpt-oss-20b` | `prompt_1`: `14/24` (`58.33%`)\n",
+      "summary_markdown": "# TRACE-ED Run Summary: GPTOSS_RUN\n\n- Run folder: `study_pipeline/outputs/runs/GPTOSS_RUN`\n- Total evaluations: `30`\n- Overall average accuracy: `78.21%`\n- Abstention detected in `2` response(s)\n\n## Accuracy by Prompt\n\n- `prompt_1` (Broad teacher summary): `70.42%`\n- `prompt_2` (Behavior and supports summary): `74.21%`\n- `prompt_3` (Support level recommendation): `90.00%`\n\n## Accuracy by Model\n\n- `openai/gpt-oss-20b`: `78.21%`\n\n## Most Missed Fields\n\n- `FBA completed stated`: `16` misses\n- `Break access accommodation`: `15` misses\n- `Verbal disruption present`: `13` misses\n- `OT services present`: `12` misses\n- `Reduced workload accommodation`: `10` misses\n- `Task refusal present`: `8` misses\n- `Behavior frequency data present`: `7` misses\n- `Sensory function stated`: `7` misses\n- `Baseline data present`: `5` misses\n- `Visual schedule accommodation`: `5` misses\n\n## Best Runs\n\n- `CASE001` | `openai/gpt-oss-20b` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE002` | `openai/gpt-oss-20b` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE003` | `openai/gpt-oss-20b` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE005` | `openai/gpt-oss-20b` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE007` | `openai/gpt-oss-20b` | `prompt_3`: `2/2` (`100.00%`)\n\n## Weakest Runs\n\n- `CASE004` | `openai/gpt-oss-20b` | `prompt_3`: `1/2` (`50.00%`)\n- `CASE006` | `openai/gpt-oss-20b` | `prompt_3`: `1/2` (`50.00%`)\n- `CASE005` | `openai/gpt-oss-20b` | `prompt_2`: `10/19` (`52.63%`)\n- `CASE005` | `openai/gpt-oss-20b` | `prompt_1`: `13/24` (`54.17%`)\n- `CASE009` | `openai/gpt-oss-20b` | `prompt_1`: `14/24` (`58.33%`)\n",
       "results": [
         {
           "result_id": "CASE001__openai_gpt-oss-20b__prompt_1__2026-05-26T20:36:46.902820",
@@ -38834,7 +38834,7 @@
       "run_id": "LLAMA_RUN",
       "summary": {
         "run_id": "LLAMA_RUN",
-        "run_dir": "C:\\Users\\ovycl\\OneDrive\\Desktop\\TRACE-FELLOWSHIP\\surca_research_pipeline\\study_pipeline\\outputs\\runs\\LLAMA_RUN",
+        "run_dir": "study_pipeline/outputs/runs/LLAMA_RUN",
         "case_ids": [
           "CASE001",
           "CASE002",
@@ -39003,7 +39003,7 @@
           }
         ]
       },
-      "summary_markdown": "# TRACE-ED Run Summary: LLAMA_RUN\n\n- Run folder: `C:\\Users\\ovycl\\OneDrive\\Desktop\\TRACE-FELLOWSHIP\\surca_research_pipeline\\study_pipeline\\outputs\\runs\\LLAMA_RUN`\n- Total evaluations: `30`\n- Overall average accuracy: `76.79%`\n- Abstention detected in `0` response(s)\n\n## Accuracy by Prompt\n\n- `prompt_1` (Broad teacher summary): `64.58%`\n- `prompt_2` (Behavior and supports summary): `65.79%`\n- `prompt_3` (Support level recommendation): `100.00%`\n\n## Accuracy by Model\n\n- `llama-3.2-1b-instruct`: `76.79%`\n\n## Most Missed Fields\n\n- `OT services present`: `19` misses\n- `Break access accommodation`: `16` misses\n- `FBA completed stated`: `15` misses\n- `Verbal disruption present`: `13` misses\n- `Visual schedule accommodation`: `13` misses\n- `Escape function stated`: `12` misses\n- `Behavior frequency data present`: `10` misses\n- `Reduced workload accommodation`: `10` misses\n- `Task refusal present`: `8` misses\n- `Baseline data present`: `5` misses\n\n## Best Runs\n\n- `CASE001` | `llama-3.2-1b-instruct` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE002` | `llama-3.2-1b-instruct` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE003` | `llama-3.2-1b-instruct` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE004` | `llama-3.2-1b-instruct` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE005` | `llama-3.2-1b-instruct` | `prompt_3`: `2/2` (`100.00%`)\n\n## Weakest Runs\n\n- `CASE005` | `llama-3.2-1b-instruct` | `prompt_1`: `11/24` (`45.83%`)\n- `CASE005` | `llama-3.2-1b-instruct` | `prompt_2`: `9/19` (`47.37%`)\n- `CASE009` | `llama-3.2-1b-instruct` | `prompt_2`: `10/19` (`52.63%`)\n- `CASE002` | `llama-3.2-1b-instruct` | `prompt_2`: `11/19` (`57.89%`)\n- `CASE004` | `llama-3.2-1b-instruct` | `prompt_2`: `11/19` (`57.89%`)\n",
+      "summary_markdown": "# TRACE-ED Run Summary: LLAMA_RUN\n\n- Run folder: `study_pipeline/outputs/runs/LLAMA_RUN`\n- Total evaluations: `30`\n- Overall average accuracy: `76.79%`\n- Abstention detected in `0` response(s)\n\n## Accuracy by Prompt\n\n- `prompt_1` (Broad teacher summary): `64.58%`\n- `prompt_2` (Behavior and supports summary): `65.79%`\n- `prompt_3` (Support level recommendation): `100.00%`\n\n## Accuracy by Model\n\n- `llama-3.2-1b-instruct`: `76.79%`\n\n## Most Missed Fields\n\n- `OT services present`: `19` misses\n- `Break access accommodation`: `16` misses\n- `FBA completed stated`: `15` misses\n- `Verbal disruption present`: `13` misses\n- `Visual schedule accommodation`: `13` misses\n- `Escape function stated`: `12` misses\n- `Behavior frequency data present`: `10` misses\n- `Reduced workload accommodation`: `10` misses\n- `Task refusal present`: `8` misses\n- `Baseline data present`: `5` misses\n\n## Best Runs\n\n- `CASE001` | `llama-3.2-1b-instruct` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE002` | `llama-3.2-1b-instruct` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE003` | `llama-3.2-1b-instruct` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE004` | `llama-3.2-1b-instruct` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE005` | `llama-3.2-1b-instruct` | `prompt_3`: `2/2` (`100.00%`)\n\n## Weakest Runs\n\n- `CASE005` | `llama-3.2-1b-instruct` | `prompt_1`: `11/24` (`45.83%`)\n- `CASE005` | `llama-3.2-1b-instruct` | `prompt_2`: `9/19` (`47.37%`)\n- `CASE009` | `llama-3.2-1b-instruct` | `prompt_2`: `10/19` (`52.63%`)\n- `CASE002` | `llama-3.2-1b-instruct` | `prompt_2`: `11/19` (`57.89%`)\n- `CASE004` | `llama-3.2-1b-instruct` | `prompt_2`: `11/19` (`57.89%`)\n",
       "results": [
         {
           "result_id": "CASE001__llama-3.2-1b-instruct__prompt_1__2026-05-26T20:48:41.336693",
@@ -58961,7 +58961,7 @@
       "run_id": "NEMOTRON_RUN",
       "summary": {
         "run_id": "NEMOTRON_RUN",
-        "run_dir": "C:\\Users\\ovycl\\OneDrive\\Desktop\\TRACE-FELLOWSHIP\\surca_research_pipeline\\study_pipeline\\outputs\\runs\\NEMOTRON_RUN",
+        "run_dir": "study_pipeline/outputs/runs/NEMOTRON_RUN",
         "case_ids": [
           "CASE001",
           "CASE002",
