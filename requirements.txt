@@ -6,6 +6,7 @@
 # - surca_research_pipeline/RESEARCH/special_ed_pipeline_hardened.py
 
 charset-normalizer>=3.4.0
+boto3>=1.40.0
 fastapi>=0.118.0
 numpy>=2.0.0
 pdfplumber>=0.11.0

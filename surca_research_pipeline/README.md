@@ -11,7 +11,7 @@ surca_research_pipeline\src\runtime\run_config.json
 ```
 
 Change:
-- `base_url`
+- `provider`
 - `model`
 - `run_cases`
 - `run_id`
@@ -23,17 +23,34 @@ First-time setup:
 surca_research_pipeline\src\runtime\run_surca.bat setup
 ```
 
+Bedrock:
+1. In AWS, stay in `us-east-2`.
+2. In the AWS access portal, click `Access keys` for `AWSPowerUserAccess`.
+3. Copy the temporary credential commands into the same Command Prompt window.
+4. In `src\runtime\run_config.json`, use:
+
+```json
+"provider": "bedrock",
+"aws_region": "us-east-2",
+"model": "us.amazon.nova-micro-v1:0"
+```
+
 LM Studio:
 1. Open LM Studio.
 2. Load the model you want to test.
 3. Start the local server.
-4. Copy the model ID into `src\runtime\run_config.json`.
-5. Use the server URL shown by LM Studio.
+4. In `src\runtime\run_config.json`, use:
+
+```json
+"provider": "lmstudio",
+"base_url": "http://127.0.0.1:1234",
+"model": "YOUR_LM_STUDIO_MODEL_ID"
+```
 
 Workflow:
 
 1. Edit `src\runtime\run_config.json`
-2. Start LM Studio and load the model
+2. Set AWS credentials for Bedrock, or start LM Studio for local runs
 3. Run `verify`
 4. Run `run`
 5. Open `demo` if you want to present the results
@@ -57,6 +74,13 @@ Run the configured test batch:
 
 ```bat
 surca_research_pipeline\src\runtime\run_surca.bat run
+```
+
+Output folders:
+
+```text
+LM Studio runs: surca_research_pipeline\study_pipeline\outputs\runs
+Bedrock runs:   surca_research_pipeline\study_pipeline\outputs\bedrock_runs
 ```
 
 Run again with the same run id:

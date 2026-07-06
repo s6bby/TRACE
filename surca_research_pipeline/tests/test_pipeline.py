@@ -12,6 +12,7 @@ from surca_research_pipeline.src.pipeline.special_ed_pipeline_hardened import (
     load_prompts,
     run_extract_only,
     run_preflight_validation,
+    safe_model_name,
     write_run_report,
 )
 
@@ -100,6 +101,11 @@ def test_prompt_specific_scoring_coverage():
         "ratio_1to1_explicitly_stated",
         "ratio_2to1_explicitly_stated",
     ]
+
+
+def test_safe_model_name_removes_windows_problem_characters():
+    assert safe_model_name("us.amazon.nova-micro-v1:0") == "us.amazon.nova-micro-v1_0"
+    assert safe_model_name("mistralai/mistral-nemo-instruct-2407") == "mistralai_mistral-nemo-instruct-2407"
 
 
 def test_preflight_validation_rejects_missing_case():

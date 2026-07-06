@@ -54,6 +54,8 @@ if not exist "%PYTHON%" (
 if not defined RUN_CASES if defined PILOT_CASES set "RUN_CASES=%PILOT_CASES%"
 if not defined RUN_ID if defined PILOT_RUN_ID set "RUN_ID=%PILOT_RUN_ID%"
 if not defined RUN_ID set "RUN_ID=trace_ed_run_01"
+if not defined PROVIDER set "PROVIDER=lmstudio"
+if not defined AWS_REGION set "AWS_REGION=us-east-2"
 if defined RUN_ID_OVERRIDE set "RUN_ID=%RUN_ID_OVERRIDE%"
 
 if /I "%ACTION%"=="verify" goto verify
@@ -79,12 +81,17 @@ exit /b 0
 :verify
 call :pipeline --mode validate --base-dir "%BASE_DIR%"
 if errorlevel 1 exit /b 1
-call :pipeline --mode verify --base-dir "%BASE_DIR%" --base-url "%BASE_URL%" --models "%MODEL%"
+call :pipeline --mode verify --base-dir "%BASE_DIR%" --provider "%PROVIDER%" --base-url "%BASE_URL%" --models "%MODEL%" --aws-region "%AWS_REGION%" --aws-profile "%AWS_PROFILE%"
 if errorlevel 1 exit /b 1
 echo.
 echo TRACE-ED is ready.
+echo Provider: %PROVIDER%
 echo Model: %MODEL%
-echo Server: %BASE_URL%
+if /I "%PROVIDER%"=="bedrock" (
+    echo AWS region: %AWS_REGION%
+) else (
+    echo Server: %BASE_URL%
+)
 if defined RUN_CASES (
     echo Cases: %RUN_CASES%
 ) else (
@@ -96,22 +103,22 @@ exit /b 0
 call :show_context_reminder
 call :pipeline --mode validate --base-dir "%BASE_DIR%"
 if errorlevel 1 exit /b 1
-call :pipeline --mode verify --base-dir "%BASE_DIR%" --base-url "%BASE_URL%" --models "%MODEL%"
+call :pipeline --mode verify --base-dir "%BASE_DIR%" --provider "%PROVIDER%" --base-url "%BASE_URL%" --models "%MODEL%" --aws-region "%AWS_REGION%" --aws-profile "%AWS_PROFILE%"
 if errorlevel 1 exit /b 1
 
 set "SELECTED_RUN_ID=%RUN_ID%"
 
 if defined RUN_CASES (
     if defined OVERWRITE (
-        call :pipeline --mode run --base-dir "%BASE_DIR%" --base-url "%BASE_URL%" --models "%MODEL%" --run-id "%SELECTED_RUN_ID%" --cases "%RUN_CASES%" --overwrite-run
+        call :pipeline --mode run --base-dir "%BASE_DIR%" --provider "%PROVIDER%" --base-url "%BASE_URL%" --models "%MODEL%" --aws-region "%AWS_REGION%" --aws-profile "%AWS_PROFILE%" --run-id "%SELECTED_RUN_ID%" --cases "%RUN_CASES%" --overwrite-run
     ) else (
-        call :pipeline --mode run --base-dir "%BASE_DIR%" --base-url "%BASE_URL%" --models "%MODEL%" --run-id "%SELECTED_RUN_ID%" --cases "%RUN_CASES%"
+        call :pipeline --mode run --base-dir "%BASE_DIR%" --provider "%PROVIDER%" --base-url "%BASE_URL%" --models "%MODEL%" --aws-region "%AWS_REGION%" --aws-profile "%AWS_PROFILE%" --run-id "%SELECTED_RUN_ID%" --cases "%RUN_CASES%"
     )
  ) else (
     if defined OVERWRITE (
-        call :pipeline --mode run --base-dir "%BASE_DIR%" --base-url "%BASE_URL%" --models "%MODEL%" --run-id "%SELECTED_RUN_ID%" --overwrite-run
+        call :pipeline --mode run --base-dir "%BASE_DIR%" --provider "%PROVIDER%" --base-url "%BASE_URL%" --models "%MODEL%" --aws-region "%AWS_REGION%" --aws-profile "%AWS_PROFILE%" --run-id "%SELECTED_RUN_ID%" --overwrite-run
     ) else (
-        call :pipeline --mode run --base-dir "%BASE_DIR%" --base-url "%BASE_URL%" --models "%MODEL%" --run-id "%SELECTED_RUN_ID%"
+        call :pipeline --mode run --base-dir "%BASE_DIR%" --provider "%PROVIDER%" --base-url "%BASE_URL%" --models "%MODEL%" --aws-region "%AWS_REGION%" --aws-profile "%AWS_PROFILE%" --run-id "%SELECTED_RUN_ID%"
     )
 )
 if errorlevel 1 exit /b 1
@@ -144,9 +151,14 @@ exit /b %errorlevel%
 :show_context_reminder
 echo.
 echo Reminder:
-echo This pipeline sends the full extracted IEP and BIP into the model.
-echo If LM Studio loads the model with a small context, the run can fail.
-echo Use a larger context length in LM Studio before running tests.
+if /I "%PROVIDER%"=="bedrock" (
+    echo This pipeline sends the full extracted IEP and BIP into AWS Bedrock.
+    echo Start with one case before running a larger AWS batch.
+) else (
+    echo This pipeline sends the full extracted IEP and BIP into the model.
+    echo If LM Studio loads the model with a small context, the run can fail.
+    echo Use a larger context length in LM Studio before running tests.
+)
 echo.
 exit /b 0
 

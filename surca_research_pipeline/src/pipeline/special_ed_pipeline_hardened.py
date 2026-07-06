@@ -15,6 +15,11 @@ from typing import Any, Dict, List, Optional, Tuple
 import requests
 from docx import Document
 
+SUPPORTED_PROVIDERS = {"lmstudio", "bedrock"}
+DEFAULT_AWS_REGION = "us-east-2"
+DEFAULT_RUN_GROUP = "runs"
+BEDROCK_RUN_GROUP = "bedrock_runs"
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
@@ -60,7 +65,7 @@ TABLE_ROW_SEPARATOR = " || "
 
 
 def safe_model_name(model_name: str) -> str:
-    return model_name.replace("/", "_")
+    return re.sub(r"[^A-Za-z0-9._-]+", "_", model_name).strip("_") or "model"
 
 
 def result_file_stem(case_id: str, model_name: str, prompt_id: str) -> str:
@@ -474,7 +479,77 @@ def safe_error_message(response: requests.Response) -> str:
         return response.text[:4000]
 
 
-def verify_backend(base_url: str, model_name: str, api_key: Optional[str]) -> None:
+def normalize_provider(provider: str) -> str:
+    cleaned = (provider or "lmstudio").strip().lower().replace("_", "")
+    aliases = {
+        "local": "lmstudio",
+        "lmstudio": "lmstudio",
+        "openai": "lmstudio",
+        "openai-compatible": "lmstudio",
+        "bedrock": "bedrock",
+        "aws": "bedrock",
+    }
+    normalized = aliases.get(cleaned, cleaned)
+    if normalized not in SUPPORTED_PROVIDERS:
+        raise ValueError(f"Unknown provider '{provider}'. Use one of: {sorted(SUPPORTED_PROVIDERS)}")
+    return normalized
+
+
+def run_group_for_provider(provider: str) -> str:
+    return BEDROCK_RUN_GROUP if normalize_provider(provider) == "bedrock" else DEFAULT_RUN_GROUP
+
+
+def latest_marker_name(run_group: str) -> str:
+    if run_group == BEDROCK_RUN_GROUP:
+        return "latest_bedrock_run.txt"
+    return "latest_run.txt"
+
+
+def load_boto3():
+    try:
+        import boto3
+        from botocore.exceptions import BotoCoreError, ClientError, NoCredentialsError, ProfileNotFound
+    except ImportError as exc:
+        raise RuntimeError(
+            "boto3 is required for AWS Bedrock runs.\n"
+            "Run: surca_research_pipeline\\src\\runtime\\run_surca.bat setup"
+        ) from exc
+    return boto3, BotoCoreError, ClientError, NoCredentialsError, ProfileNotFound
+
+
+def make_bedrock_client(service_name: str, aws_region: str, aws_profile: Optional[str]):
+    boto3, _, _, _, ProfileNotFound = load_boto3()
+    try:
+        if aws_profile:
+            session = boto3.Session(profile_name=aws_profile, region_name=aws_region)
+        else:
+            session = boto3.Session(region_name=aws_region)
+        return session.client(service_name, region_name=aws_region)
+    except ProfileNotFound as exc:
+        raise RuntimeError(
+            f"AWS profile '{aws_profile}' was not found.\n"
+            "Use temporary AWS access keys from the AWS access portal, or configure this profile first."
+        ) from exc
+
+
+def format_aws_error(exc: Exception) -> str:
+    _, BotoCoreError, ClientError, NoCredentialsError, _ = load_boto3()
+    if isinstance(exc, NoCredentialsError):
+        return (
+            "AWS credentials were not found. In the AWS access portal, click Access keys for "
+            "AWSPowerUserAccess and set the temporary credentials in this same terminal window."
+        )
+    if isinstance(exc, ClientError):
+        error = exc.response.get("Error", {})
+        code = error.get("Code", "ClientError")
+        message = error.get("Message", str(exc))
+        return f"{code}: {message}"
+    if isinstance(exc, BotoCoreError):
+        return str(exc)
+    return str(exc)
+
+
+def verify_lmstudio_backend(base_url: str, model_name: str, api_key: Optional[str]) -> None:
     base = normalize_openai_base(base_url)
     headers = {}
     if api_key:
@@ -491,6 +566,44 @@ def verify_backend(base_url: str, model_name: str, api_key: Optional[str]) -> No
     model_ids = [item["id"] for item in response.json().get("data", []) if "id" in item]
     if model_name not in model_ids:
         raise ValueError(f"Model '{model_name}' not found on backend.\nAvailable models: {model_ids[:50]}")
+
+
+def verify_bedrock_backend(model_name: str, aws_region: str, aws_profile: Optional[str]) -> None:
+    client = make_bedrock_client("bedrock", aws_region, aws_profile)
+    try:
+        client.get_foundation_model(modelIdentifier=model_name)
+        return
+    except Exception as exc:
+        foundation_model_error = format_aws_error(exc)
+
+    try:
+        client.get_inference_profile(inferenceProfileIdentifier=model_name)
+        return
+    except Exception as exc:
+        inference_profile_error = format_aws_error(exc)
+
+    raise RuntimeError(
+        f"Bedrock model check failed.\n"
+        f"Region: {aws_region}\n"
+        f"Model or inference profile: {model_name}\n"
+        f"Foundation model check: {foundation_model_error}\n"
+        f"Inference profile check: {inference_profile_error}"
+    )
+
+
+def verify_backend(
+    provider: str,
+    base_url: str,
+    model_name: str,
+    api_key: Optional[str],
+    aws_region: str,
+    aws_profile: Optional[str],
+) -> None:
+    normalized_provider = normalize_provider(provider)
+    if normalized_provider == "bedrock":
+        verify_bedrock_backend(model_name, aws_region, aws_profile)
+    else:
+        verify_lmstudio_backend(base_url, model_name, api_key)
 
 
 def call_openai_compatible(
@@ -558,6 +671,85 @@ def call_openai_compatible(
         return str(content).strip()
     except Exception as exc:
         raise RuntimeError("Unexpected response format from backend.\n" f"Body:\n{json.dumps(data, indent=2)}") from exc
+
+
+def call_bedrock_converse(
+    model_name: str,
+    prompt: str,
+    aws_region: str,
+    aws_profile: Optional[str],
+    temperature: float,
+    max_tokens: int,
+) -> str:
+    client = make_bedrock_client("bedrock-runtime", aws_region, aws_profile)
+    payload = {
+        "modelId": model_name,
+        "system": [
+            {
+                "text": "You are a helpful assistant answering questions about special education documentation.",
+            }
+        ],
+        "messages": [
+            {
+                "role": "user",
+                "content": [{"text": prompt}],
+            }
+        ],
+        "inferenceConfig": {
+            "temperature": temperature,
+            "maxTokens": max_tokens,
+        },
+    }
+
+    try:
+        response = client.converse(**payload)
+    except Exception as exc:
+        raise RuntimeError(
+            f"Bedrock Converse request failed.\n"
+            f"Region: {aws_region}\n"
+            f"Model: {model_name}\n"
+            f"Prompt chars: {len(prompt)}\n"
+            f"Max tokens: {max_tokens}\n"
+            f"Reason: {format_aws_error(exc)}"
+        ) from exc
+
+    try:
+        content = response["output"]["message"]["content"]
+        text_parts = [item.get("text", "") for item in content if isinstance(item, dict) and item.get("text")]
+        return "\n".join(text_parts).strip()
+    except Exception as exc:
+        raise RuntimeError("Unexpected response format from Bedrock.\n" f"Body:\n{json.dumps(response, indent=2)}") from exc
+
+
+def call_model_backend(
+    provider: str,
+    base_url: str,
+    model_name: str,
+    prompt: str,
+    api_key: Optional[str],
+    aws_region: str,
+    aws_profile: Optional[str],
+    temperature: float,
+    max_tokens: int,
+) -> str:
+    normalized_provider = normalize_provider(provider)
+    if normalized_provider == "bedrock":
+        return call_bedrock_converse(
+            model_name=model_name,
+            prompt=prompt,
+            aws_region=aws_region,
+            aws_profile=aws_profile,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+    return call_openai_compatible(
+        base_url=base_url,
+        model_name=model_name,
+        prompt=prompt,
+        api_key=api_key,
+        temperature=temperature,
+        max_tokens=max_tokens,
+    )
 
 
 def collect_pattern_hits(text: str, patterns: List[str]) -> Tuple[List[str], List[str]]:
@@ -645,9 +837,14 @@ def compare_to_ground_truth(
     return correct, scored_field_count, accuracy, matches
 
 
-def prepare_run_paths(base_dir: Path, run_id: str, overwrite_run: bool) -> Dict[str, Path]:
+def prepare_run_paths(
+    base_dir: Path,
+    run_id: str,
+    overwrite_run: bool,
+    run_group: str = DEFAULT_RUN_GROUP,
+) -> Dict[str, Path]:
     outputs_dir = base_dir / "outputs"
-    runs_root = outputs_dir / "runs"
+    runs_root = outputs_dir / run_group
     run_dir = runs_root / run_id
 
     if run_dir.exists():
@@ -661,7 +858,7 @@ def prepare_run_paths(base_dir: Path, run_id: str, overwrite_run: bool) -> Dict[
         "outputs": outputs_dir,
         "runs_root": runs_root,
         "run_dir": run_dir,
-        "latest_run": outputs_dir / "latest_run.txt",
+        "latest_run": outputs_dir / latest_marker_name(run_group),
         "raw": run_dir / "raw_responses",
         "pred": run_dir / "predicted_json",
         "claims": run_dir / "claims",
@@ -751,10 +948,14 @@ def collect_manifest(
     paths: Dict[str, Path],
     case_dirs: List[Path],
     models: List[str],
+    provider: str,
     base_url: str,
+    aws_region: str,
+    aws_profile: Optional[str],
     prompts: Optional[Dict[str, str]] = None,
 ) -> Dict[str, Any]:
     prompt_dir = base_dir / DEFAULT_PROMPTS_DIRNAME
+    normalized_provider = normalize_provider(provider)
 
     return {
         "run_id": run_id,
@@ -768,8 +969,11 @@ def collect_manifest(
         "rules_path": str(paths["rule_catalog"].resolve()),
         "case_ids": [path.name for path in case_dirs],
         "case_count": len(case_dirs),
+        "provider": normalized_provider,
         "models": models,
-        "base_url": normalize_openai_base(base_url) if base_url else "",
+        "base_url": normalize_openai_base(base_url) if normalized_provider == "lmstudio" and base_url else "",
+        "aws_region": aws_region if normalized_provider == "bedrock" else "",
+        "aws_profile": aws_profile or "",
         "prompt_dir": str(prompt_dir.resolve()),
         "prompt_files": PROMPT_FILE_MAP,
         "prompts": prompts or {},
@@ -800,27 +1004,27 @@ def save_case_text(paths: Dict[str, Path], case: Dict[str, Any]) -> None:
     (paths["docx"] / f"{case['case_id']}__BIP_extracted.txt").write_text(case["bip_text"], encoding="utf-8")
 
 
-def read_latest_run_id(base_dir: Path) -> str:
-    latest_path = base_dir / "outputs" / "latest_run.txt"
+def read_latest_run_id(base_dir: Path, run_group: str = DEFAULT_RUN_GROUP) -> str:
+    latest_path = base_dir / "outputs" / latest_marker_name(run_group)
     if latest_path.exists():
         value = latest_path.read_text(encoding="utf-8").strip()
         if value:
             return value
 
-    runs_root = base_dir / "outputs" / "runs"
+    runs_root = base_dir / "outputs" / run_group
     if not runs_root.exists():
-        raise FileNotFoundError("No runs directory exists yet.")
+        raise FileNotFoundError(f"No {run_group} directory exists yet.")
 
     run_dirs = sorted([path for path in runs_root.iterdir() if path.is_dir()], key=lambda path: path.name)
     if not run_dirs:
-        raise FileNotFoundError("No saved run folders were found.")
+        raise FileNotFoundError(f"No saved run folders were found in {runs_root}.")
 
     return run_dirs[-1].name
 
 
-def resolve_run_dir(base_dir: Path, requested_run_id: str) -> Path:
-    run_id = normalize_run_id(requested_run_id) if requested_run_id else read_latest_run_id(base_dir)
-    run_dir = base_dir / "outputs" / "runs" / run_id
+def resolve_run_dir(base_dir: Path, requested_run_id: str, run_group: str = DEFAULT_RUN_GROUP) -> Path:
+    run_id = normalize_run_id(requested_run_id) if requested_run_id else read_latest_run_id(base_dir, run_group)
+    run_dir = base_dir / "outputs" / run_group / run_id
     if not run_dir.exists():
         raise FileNotFoundError(f"Run folder not found: {run_dir}")
     return run_dir
@@ -1039,11 +1243,13 @@ def public_run_path(run_dir: Path) -> str:
 def build_demo_run_payload(run_dir: Path) -> Dict[str, Any]:
     summary_rows = load_csv_rows(run_dir / "results.csv")
     field_rows = load_csv_rows(run_dir / "field_results.csv")
+    manifest = load_json_file(run_dir / "run_manifest.json")
     metrics = load_json_file(run_dir / REPORT_JSON_NAME) or build_run_metrics(run_dir)
     original_run_dir = str(run_dir.resolve())
     safe_run_dir = public_run_path(run_dir)
     metrics = dict(metrics)
     metrics["run_dir"] = safe_run_dir
+    metrics["provider"] = manifest.get("provider", "unknown")
     summary_markdown = ""
     summary_md_path = run_dir / REPORT_MARKDOWN_NAME
     if summary_md_path.exists():
@@ -1106,6 +1312,8 @@ def build_demo_run_payload(run_dir: Path) -> Dict[str, Any]:
 
     return {
         "run_id": run_dir.name,
+        "provider": manifest.get("provider", "unknown"),
+        "run_path": safe_run_dir,
         "summary": metrics,
         "summary_markdown": summary_markdown,
         "results": results,
@@ -1113,10 +1321,12 @@ def build_demo_run_payload(run_dir: Path) -> Dict[str, Any]:
 
 
 def export_demo_data(base_dir: Path) -> Tuple[Path, int]:
-    runs_root = base_dir / "outputs" / "runs"
     run_dirs = []
-    if runs_root.exists():
-        run_dirs = sorted([path for path in runs_root.iterdir() if path.is_dir()], key=lambda path: path.name)
+    for run_group in [DEFAULT_RUN_GROUP, BEDROCK_RUN_GROUP]:
+        runs_root = base_dir / "outputs" / run_group
+        if runs_root.exists():
+            run_dirs.extend([path for path in runs_root.iterdir() if path.is_dir()])
+    run_dirs = sorted(run_dirs, key=lambda path: (path.parent.name, path.name))
 
     payload = {
         "generated_at_utc": datetime.utcnow().isoformat(),
@@ -1145,7 +1355,19 @@ def run_extract_only(
     preflight = run_preflight_validation(base_dir, selected_cases, validate_prompts=False)
     case_dirs = preflight["case_dirs"]
     paths = prepare_run_paths(base_dir, run_id, overwrite_run)
-    manifest = collect_manifest(run_id, "extract", base_dir, paths, case_dirs, [], "", {})
+    manifest = collect_manifest(
+        run_id,
+        "extract",
+        base_dir,
+        paths,
+        case_dirs,
+        [],
+        "lmstudio",
+        "",
+        "",
+        None,
+        {},
+    )
     manifest["preflight_validation_passed"] = True
     manifest["validated_case_count"] = preflight["case_count"]
     manifest["expected_case_count"] = len(case_dirs)
@@ -1179,24 +1401,40 @@ def run_extract_only(
 def run_pipeline(
     base_dir: Path,
     models: List[str],
+    provider: str,
     base_url: str,
     api_key: Optional[str],
+    aws_region: str,
+    aws_profile: Optional[str],
     selected_cases: Optional[List[str]],
     run_id: str,
     overwrite_run: bool,
 ) -> None:
     prompts = load_prompts(base_dir)
+    normalized_provider = normalize_provider(provider)
 
     for model_name in models:
-        verify_backend(base_url, model_name, api_key)
+        verify_backend(normalized_provider, base_url, model_name, api_key, aws_region, aws_profile)
 
     preflight = run_preflight_validation(base_dir, selected_cases, validate_prompts=True)
     case_dirs = preflight["case_dirs"]
-    paths = prepare_run_paths(base_dir, run_id, overwrite_run)
+    paths = prepare_run_paths(base_dir, run_id, overwrite_run, run_group_for_provider(normalized_provider))
     init_csvs(paths["summary_csv"], paths["field_csv"])
     save_rule_catalog(paths)
 
-    manifest = collect_manifest(run_id, "run", base_dir, paths, case_dirs, models, base_url, prompts)
+    manifest = collect_manifest(
+        run_id,
+        "run",
+        base_dir,
+        paths,
+        case_dirs,
+        models,
+        normalized_provider,
+        base_url,
+        aws_region,
+        aws_profile,
+        prompts,
+    )
     manifest["preflight_validation_passed"] = True
     manifest["validated_case_count"] = preflight["case_count"]
     manifest["expected_run_count"] = len(case_dirs) * len(models) * len(prompts)
@@ -1230,14 +1468,17 @@ def run_pipeline(
                     if len(model_input) > 120000:
                         raise RuntimeError(
                             f"{case['case_id']} produced an unusually large prompt "
-                            f"({len(model_input)} chars). Check extracted text before sending to LM Studio."
+                            f"({len(model_input)} chars). Check extracted text before sending to the model backend."
                         )
 
-                    raw_response = call_openai_compatible(
+                    raw_response = call_model_backend(
+                        provider=normalized_provider,
                         base_url=base_url,
                         model_name=model_name,
                         prompt=model_input,
                         api_key=api_key,
+                        aws_region=aws_region,
+                        aws_profile=aws_profile,
                         temperature=TEMPERATURE,
                         max_tokens=MAX_RESPONSE_TOKENS,
                     )
@@ -1373,8 +1614,8 @@ def run_pipeline(
     write_manifest(paths["manifest"], manifest)
 
 
-def run_report_mode(base_dir: Path, requested_run_id: str) -> None:
-    run_dir = resolve_run_dir(base_dir, requested_run_id)
+def run_report_mode(base_dir: Path, requested_run_id: str, provider: str) -> None:
+    run_dir = resolve_run_dir(base_dir, requested_run_id, run_group_for_provider(provider))
     metrics = write_run_report(run_dir)
     print(f"report ready: {run_dir / REPORT_MARKDOWN_NAME}")
     print(f"overall average accuracy: {metrics['overall_average_accuracy']:.2f}%")
@@ -1383,9 +1624,12 @@ def run_report_mode(base_dir: Path, requested_run_id: str) -> None:
 def parse_args():
     parser = argparse.ArgumentParser(description="hardened special education llm evaluation pipeline")
     parser.add_argument("--base-dir", type=str, default="study_pipeline")
+    parser.add_argument("--provider", type=str, default="lmstudio", choices=sorted(SUPPORTED_PROVIDERS))
     parser.add_argument("--models", type=str, default="", help="comma-separated model ids")
     parser.add_argument("--base-url", type=str, default="http://127.0.0.1:1234")
     parser.add_argument("--api-key", type=str, default="")
+    parser.add_argument("--aws-region", type=str, default=DEFAULT_AWS_REGION)
+    parser.add_argument("--aws-profile", type=str, default="")
     parser.add_argument("--cases", type=str, default="")
     parser.add_argument("--run-id", type=str, default="", help="optional name for the run folder")
     parser.add_argument("--overwrite-run", action="store_true", help="overwrite an existing run folder with the same run id")
@@ -1414,7 +1658,7 @@ def main():
         return
 
     if args.mode == "report":
-        run_report_mode(base_dir, args.run_id)
+        run_report_mode(base_dir, args.run_id, args.provider)
         return
 
     if args.mode == "export-demo":
@@ -1429,16 +1673,26 @@ def main():
 
     if args.mode == "verify":
         for model_name in models:
-            verify_backend(args.base_url, model_name, args.api_key or None)
-            print(f"backend ok for model: {model_name}")
+            verify_backend(
+                args.provider,
+                args.base_url,
+                model_name,
+                args.api_key or None,
+                args.aws_region,
+                args.aws_profile or None,
+            )
+            print(f"{normalize_provider(args.provider)} backend ok for model: {model_name}")
         return
 
     run_id = normalize_run_id(args.run_id) if args.run_id else make_run_id()
     run_pipeline(
         base_dir=base_dir,
         models=models,
+        provider=args.provider,
         base_url=args.base_url,
         api_key=args.api_key or None,
+        aws_region=args.aws_region,
+        aws_profile=args.aws_profile or None,
         selected_cases=selected_cases,
         run_id=run_id,
         overwrite_run=args.overwrite_run,

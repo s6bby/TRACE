@@ -1,8 +1,2194 @@
 {
-  "generated_at_utc": "2026-06-29T03:53:37.612318",
+  "generated_at_utc": "2026-07-06T20:17:02.320295",
   "runs": [
     {
+      "run_id": "aws_nova_micro_smoke_01",
+      "provider": "bedrock",
+      "run_path": "study_pipeline/outputs/bedrock_runs/aws_nova_micro_smoke_01",
+      "summary": {
+        "run_id": "aws_nova_micro_smoke_01",
+        "run_dir": "study_pipeline/outputs/bedrock_runs/aws_nova_micro_smoke_01",
+        "case_ids": [
+          "CASE001"
+        ],
+        "model_names": [
+          "us.amazon.nova-micro-v1:0"
+        ],
+        "prompt_ids": [
+          "prompt_1",
+          "prompt_2",
+          "prompt_3"
+        ],
+        "total_evaluations": 3,
+        "overall_average_accuracy": 83.99,
+        "accuracy_by_prompt": {
+          "prompt_1": 62.5,
+          "prompt_2": 89.47,
+          "prompt_3": 100.0
+        },
+        "accuracy_by_model": {
+          "us.amazon.nova-micro-v1:0": 83.99
+        },
+        "abstention_detected_count": 0,
+        "most_missed_fields": [
+          {
+            "field_name": "baseline_data_present",
+            "field_label": "Baseline data present",
+            "miss_count": 1
+          },
+          {
+            "field_name": "behavior_frequency_numeric_present",
+            "field_label": "Behavior frequency data present",
+            "miss_count": 1
+          },
+          {
+            "field_name": "break_access_accommodation",
+            "field_label": "Break access accommodation",
+            "miss_count": 1
+          },
+          {
+            "field_name": "function_attention_stated",
+            "field_label": "Attention function stated",
+            "miss_count": 1
+          },
+          {
+            "field_name": "function_escape_stated",
+            "field_label": "Escape function stated",
+            "miss_count": 1
+          },
+          {
+            "field_name": "function_sensory_stated",
+            "field_label": "Sensory function stated",
+            "miss_count": 1
+          },
+          {
+            "field_name": "function_tangible_stated",
+            "field_label": "Tangible function stated",
+            "miss_count": 1
+          },
+          {
+            "field_name": "ot_services_present",
+            "field_label": "OT services present",
+            "miss_count": 1
+          },
+          {
+            "field_name": "restraint_or_isolation_flagged",
+            "field_label": "Restraint or isolation flagged",
+            "miss_count": 1
+          },
+          {
+            "field_name": "verbal_disruption_present",
+            "field_label": "Verbal disruption present",
+            "miss_count": 1
+          }
+        ],
+        "top_runs": [
+          {
+            "case_id": "CASE001",
+            "model_name": "us.amazon.nova-micro-v1:0",
+            "prompt_id": "prompt_3",
+            "accuracy_percent": 100.0,
+            "correct_scored_fields": 2,
+            "scored_field_count": 2
+          },
+          {
+            "case_id": "CASE001",
+            "model_name": "us.amazon.nova-micro-v1:0",
+            "prompt_id": "prompt_2",
+            "accuracy_percent": 89.47,
+            "correct_scored_fields": 17,
+            "scored_field_count": 19
+          },
+          {
+            "case_id": "CASE001",
+            "model_name": "us.amazon.nova-micro-v1:0",
+            "prompt_id": "prompt_1",
+            "accuracy_percent": 62.5,
+            "correct_scored_fields": 15,
+            "scored_field_count": 24
+          }
+        ],
+        "bottom_runs": [
+          {
+            "case_id": "CASE001",
+            "model_name": "us.amazon.nova-micro-v1:0",
+            "prompt_id": "prompt_1",
+            "accuracy_percent": 62.5,
+            "correct_scored_fields": 15,
+            "scored_field_count": 24
+          },
+          {
+            "case_id": "CASE001",
+            "model_name": "us.amazon.nova-micro-v1:0",
+            "prompt_id": "prompt_2",
+            "accuracy_percent": 89.47,
+            "correct_scored_fields": 17,
+            "scored_field_count": 19
+          },
+          {
+            "case_id": "CASE001",
+            "model_name": "us.amazon.nova-micro-v1:0",
+            "prompt_id": "prompt_3",
+            "accuracy_percent": 100.0,
+            "correct_scored_fields": 2,
+            "scored_field_count": 2
+          }
+        ],
+        "provider": "bedrock"
+      },
+      "summary_markdown": "# TRACE-ED Run Summary: aws_nova_micro_smoke_01\n\n- Run folder: `study_pipeline/outputs/bedrock_runs/aws_nova_micro_smoke_01`\n- Total evaluations: `3`\n- Overall average accuracy: `83.99%`\n- Abstention detected in `0` response(s)\n\n## Accuracy by Prompt\n\n- `prompt_1` (Broad teacher summary): `62.50%`\n- `prompt_2` (Behavior and supports summary): `89.47%`\n- `prompt_3` (Support level recommendation): `100.00%`\n\n## Accuracy by Model\n\n- `us.amazon.nova-micro-v1:0`: `83.99%`\n\n## Most Missed Fields\n\n- `Baseline data present`: `1` misses\n- `Behavior frequency data present`: `1` misses\n- `Break access accommodation`: `1` misses\n- `Attention function stated`: `1` misses\n- `Escape function stated`: `1` misses\n- `Sensory function stated`: `1` misses\n- `Tangible function stated`: `1` misses\n- `OT services present`: `1` misses\n- `Restraint or isolation flagged`: `1` misses\n- `Verbal disruption present`: `1` misses\n\n## Best Runs\n\n- `CASE001` | `us.amazon.nova-micro-v1:0` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE001` | `us.amazon.nova-micro-v1:0` | `prompt_2`: `17/19` (`89.47%`)\n- `CASE001` | `us.amazon.nova-micro-v1:0` | `prompt_1`: `15/24` (`62.50%`)\n\n## Weakest Runs\n\n- `CASE001` | `us.amazon.nova-micro-v1:0` | `prompt_1`: `15/24` (`62.50%`)\n- `CASE001` | `us.amazon.nova-micro-v1:0` | `prompt_2`: `17/19` (`89.47%`)\n- `CASE001` | `us.amazon.nova-micro-v1:0` | `prompt_3`: `2/2` (`100.00%`)\n",
+      "results": [
+        {
+          "result_id": "CASE001__us.amazon.nova-micro-v1_0__prompt_1__2026-07-06T20:13:20.411958",
+          "timestamp": "2026-07-06T20:13:20.411958",
+          "case_id": "CASE001",
+          "model_name": "us.amazon.nova-micro-v1:0",
+          "prompt_id": "prompt_1",
+          "prompt_label": "Broad teacher summary",
+          "accuracy_percent": 62.5,
+          "correct_scored_fields": 15,
+          "scored_field_count": 24,
+          "abstention_detected": false,
+          "abstention_hits": "",
+          "raw_response": "Certainly! When working with John Smith, who has an IEP and a Behavioral Intervention Plan (BIP), there are several key points to keep in mind to support his educational and behavioral needs effectively:\n\n### Individualized Education Program (IEP) Considerations:\n\n1. **Strengths and Interests**:\n   - John has a strong visual memory and a high interest in marine life and fish. Incorporating his interests into his learning activities can enhance engagement and motivation.\n\n2. **Academic Goals**:\n   - His IEP includes measurable annual goals in behavior regulation, functional communication, writing, and math. Regular progress monitoring is essential to track his improvements in these areas.\n\n3. **Behavioral Challenges**:\n   - John exhibits aggressive behavior during transitions and when denied access to preferred activities. It's important to provide clear, consistent expectations and use visual supports to help him navigate transitions smoothly.\n\n4. **Supports and Accommodations**:\n   - Visual schedules, timers, and an optional break-request card are part of his accommodations. Ensure these tools are consistently used to help him manage his behavior and requests for breaks.\n\n5. **Transition Planning**:\n   - Although John is currently in 1st grade, transition planning should start considering his future goals in education, employment, and independent living. Begin introducing age-appropriate transition activities.\n\n6. **Least Restrictive Environment (LRE)**:\n   - John will spend 82% of his time in a general education setting, which is ideal for inclusion and peer interaction. Support his participation in general education activities while providing necessary accommodations.\n\n### Behavioral Intervention Plan (BIP) Considerations:\n\n1. **Behavior Description**:\n   - John\u2019s aggressive and disruptive behaviors typically occur during transitions and when denied access to preferred activities. Understanding these triggers is crucial for developing effective interventions.\n\n2. **Alternative Behaviors**:\n   - Teach and reinforce alternative behaviors such as requesting breaks appropriately, asking for help when frustrated, and using coping strategies. These skills will help John manage his emotions and reduce aggressive incidents.\n\n3. **Reinforcement**:\n   - Immediate and specific verbal praise, a fish-themed token system, access to preferred activities, positive notes home, and small edible reinforcers (with parental approval) will serve as effective reinforcers for desired behaviors.\n\n4. **Consistency**:\n   - Ensure that all staff involved in John\u2019s education and behavior management are trained and have access to the BIP. Consistent implementation across all settings is key to the success of the BIP.\n\n5. **Data Collection and Review**:\n   - Daily behavior frequency data collection and weekly reviews by the case manager and BCBA will help monitor progress and make data-driven adjustments to the BIP as needed.\n\n### General Teaching Strategies:\n\n- **Positive Behavioral Supports**: Use positive behavioral interventions to encourage appropriate behaviors and reduce the occurrence of aggressive incidents.\n- **Structured Environment**: Maintain a structured and predictable classroom environment to help John feel secure and reduce anxiety that may lead to behavioral issues.\n- **Peer Interaction**: Facilitate opportunities for John to interact with peers in a supportive and supervised manner to improve his social skills and reduce isolation.\n\nBy focusing on these areas, you can provide comprehensive support that addresses both John\u2019s academic and behavioral needs, helping him to thrive in his educational journey.",
+          "prompt_text": "I'm a special education teacher and I'm reviewing a student's IEP and BIP documents right now.\n\nPlease read the documents for the student below and tell me what I should keep in mind when working with them.",
+          "predicted_fields": {
+            "aggression_present": true,
+            "self_injury_present": false,
+            "property_destruction_present": false,
+            "elopement_present": false,
+            "task_refusal_present": false,
+            "verbal_disruption_present": false,
+            "behavior_frequency_numeric_present": false,
+            "behavior_duration_numeric_present": false,
+            "baseline_data_present": false,
+            "function_escape_stated": false,
+            "function_attention_stated": false,
+            "function_tangible_stated": false,
+            "function_sensory_stated": false,
+            "bip_exists": true,
+            "fba_completed_stated": false,
+            "speech_services_present": false,
+            "ot_services_present": false,
+            "visual_schedule_accommodation": true,
+            "break_access_accommodation": false,
+            "reduced_workload_accommodation": false,
+            "safety_plan_present": false,
+            "restraint_or_isolation_flagged": true,
+            "ratio_1to1_explicitly_stated": false,
+            "ratio_2to1_explicitly_stated": false
+          },
+          "matches": {
+            "aggression_present": true,
+            "self_injury_present": true,
+            "property_destruction_present": true,
+            "elopement_present": true,
+            "task_refusal_present": true,
+            "verbal_disruption_present": false,
+            "behavior_frequency_numeric_present": false,
+            "behavior_duration_numeric_present": true,
+            "baseline_data_present": false,
+            "function_escape_stated": false,
+            "function_attention_stated": false,
+            "function_tangible_stated": false,
+            "function_sensory_stated": true,
+            "bip_exists": true,
+            "fba_completed_stated": true,
+            "speech_services_present": true,
+            "ot_services_present": false,
+            "visual_schedule_accommodation": true,
+            "break_access_accommodation": false,
+            "reduced_workload_accommodation": true,
+            "safety_plan_present": true,
+            "restraint_or_isolation_flagged": false,
+            "ratio_1to1_explicitly_stated": true,
+            "ratio_2to1_explicitly_stated": true
+          },
+          "claim_count": 14,
+          "source_unit_count": 31,
+          "claims_by_type": {
+            "behavior": 5,
+            "other": 3,
+            "recommendation": 1,
+            "safety": 1,
+            "service": 4
+          },
+          "claim_units": [
+            {
+              "unit_index": 1,
+              "source_text": "Certainly!",
+              "normalized_text": "certainly!",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 2,
+              "source_text": "When working with John Smith, who has an IEP and a Behavioral Intervention Plan (BIP), there are several key points to keep in mind to support his educational and behavioral needs effectively:",
+              "normalized_text": "when working with john smith, who has an iep and a behavioral intervention plan (bip), there are several key points to keep in mind to support his educational and behavioral needs effectively:",
+              "looks_like_claim": true,
+              "claim_type": "service",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_001"
+            },
+            {
+              "unit_index": 3,
+              "source_text": "### Individualized Education Program (IEP) Considerations:",
+              "normalized_text": "### individualized education program (iep) considerations:",
+              "looks_like_claim": true,
+              "claim_type": "other",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_002"
+            },
+            {
+              "unit_index": 4,
+              "source_text": "**Strengths and Interests**:",
+              "normalized_text": "**strengths and interests**:",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 5,
+              "source_text": "John has a strong visual memory and a high interest in marine life and fish. Incorporating his interests into his learning activities can enhance engagement and motivation.",
+              "normalized_text": "john has a strong visual memory and a high interest in marine life and fish. incorporating his interests into his learning activities can enhance engagement and motivation.",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 6,
+              "source_text": "**Academic Goals**:",
+              "normalized_text": "**academic goals**:",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 7,
+              "source_text": "His IEP includes measurable annual goals in behavior regulation, functional communication, writing, and math. Regular progress monitoring is essential to track his improvements in these areas.",
+              "normalized_text": "his iep includes measurable annual goals in behavior regulation, functional communication, writing, and math. regular progress monitoring is essential to track his improvements in these areas.",
+              "looks_like_claim": true,
+              "claim_type": "behavior",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_003"
+            },
+            {
+              "unit_index": 8,
+              "source_text": "**Behavioral Challenges**:",
+              "normalized_text": "**behavioral challenges**:",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 9,
+              "source_text": "John exhibits aggressive behavior during transitions and when denied access to preferred activities. It's important to provide clear, consistent expectations and use visual supports to help him navigate transitions smoothly.",
+              "normalized_text": "john exhibits aggressive behavior during transitions and when denied access to preferred activities. it's important to provide clear, consistent expectations and use visual supports to help him navigate transitions smoothly.",
+              "looks_like_claim": true,
+              "claim_type": "behavior",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_004"
+            },
+            {
+              "unit_index": 10,
+              "source_text": "**Supports and Accommodations**:",
+              "normalized_text": "**supports and accommodations**:",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 11,
+              "source_text": "Visual schedules, timers, and an optional break-request card are part of his accommodations. Ensure these tools are consistently used to help him manage his behavior and requests for breaks.",
+              "normalized_text": "visual schedules, timers, and an optional break-request card are part of his accommodations. ensure these tools are consistently used to help him manage his behavior and requests for breaks.",
+              "looks_like_claim": true,
+              "claim_type": "behavior",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_005"
+            },
+            {
+              "unit_index": 12,
+              "source_text": "**Transition Planning**:",
+              "normalized_text": "**transition planning**:",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 13,
+              "source_text": "Although John is currently in 1st grade, transition planning should start considering his future goals in education, employment, and independent living. Begin introducing age-appropriate transition activities.",
+              "normalized_text": "although john is currently in 1st grade, transition planning should start considering his future goals in education, employment, and independent living. begin introducing age-appropriate transition activities.",
+              "looks_like_claim": true,
+              "claim_type": "recommendation",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_006"
+            },
+            {
+              "unit_index": 14,
+              "source_text": "**Least Restrictive Environment (LRE)**:",
+              "normalized_text": "**least restrictive environment (lre)**:",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 15,
+              "source_text": "John will spend 82% of his time in a general education setting, which is ideal for inclusion and peer interaction. Support his participation in general education activities while providing necessary accommodations.",
+              "normalized_text": "john will spend 82% of his time in a general education setting, which is ideal for inclusion and peer interaction. support his participation in general education activities while providing necessary accommodations.",
+              "looks_like_claim": true,
+              "claim_type": "other",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_007"
+            },
+            {
+              "unit_index": 16,
+              "source_text": "### Behavioral Intervention Plan (BIP) Considerations:",
+              "normalized_text": "### behavioral intervention plan (bip) considerations:",
+              "looks_like_claim": true,
+              "claim_type": "service",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_008"
+            },
+            {
+              "unit_index": 17,
+              "source_text": "**Behavior Description**:",
+              "normalized_text": "**behavior description**:",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 18,
+              "source_text": "John\u2019s aggressive and disruptive behaviors typically occur during transitions and when denied access to preferred activities. Understanding these triggers is crucial for developing effective interventions.",
+              "normalized_text": "john\u2019s aggressive and disruptive behaviors typically occur during transitions and when denied access to preferred activities. understanding these triggers is crucial for developing effective interventions.",
+              "looks_like_claim": true,
+              "claim_type": "behavior",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_009"
+            },
+            {
+              "unit_index": 19,
+              "source_text": "**Alternative Behaviors**:",
+              "normalized_text": "**alternative behaviors**:",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 20,
+              "source_text": "Teach and reinforce alternative behaviors such as requesting breaks appropriately, asking for help when frustrated, and using coping strategies. These skills will help John manage his emotions and reduce aggressive incidents.",
+              "normalized_text": "teach and reinforce alternative behaviors such as requesting breaks appropriately, asking for help when frustrated, and using coping strategies. these skills will help john manage his emotions and reduce aggressive incidents.",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 21,
+              "source_text": "**Reinforcement**:",
+              "normalized_text": "**reinforcement**:",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 22,
+              "source_text": "Immediate and specific verbal praise, a fish-themed token system, access to preferred activities, positive notes home, and small edible reinforcers (with parental approval) will serve as effective reinforcers for desired behaviors.",
+              "normalized_text": "immediate and specific verbal praise, a fish-themed token system, access to preferred activities, positive notes home, and small edible reinforcers (with parental approval) will serve as effective reinforcers for desired behaviors.",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 23,
+              "source_text": "**Consistency**:",
+              "normalized_text": "**consistency**:",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 24,
+              "source_text": "Ensure that all staff involved in John\u2019s education and behavior management are trained and have access to the BIP. Consistent implementation across all settings is key to the success of the BIP.",
+              "normalized_text": "ensure that all staff involved in john\u2019s education and behavior management are trained and have access to the bip. consistent implementation across all settings is key to the success of the bip.",
+              "looks_like_claim": true,
+              "claim_type": "service",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_010"
+            },
+            {
+              "unit_index": 25,
+              "source_text": "**Data Collection and Review**:",
+              "normalized_text": "**data collection and review**:",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 26,
+              "source_text": "Daily behavior frequency data collection and weekly reviews by the case manager and BCBA will help monitor progress and make data-driven adjustments to the BIP as needed.",
+              "normalized_text": "daily behavior frequency data collection and weekly reviews by the case manager and bcba will help monitor progress and make data-driven adjustments to the bip as needed.",
+              "looks_like_claim": true,
+              "claim_type": "service",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_011"
+            },
+            {
+              "unit_index": 27,
+              "source_text": "### General Teaching Strategies:",
+              "normalized_text": "### general teaching strategies:",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 28,
+              "source_text": "**Positive Behavioral Supports**: Use positive behavioral interventions to encourage appropriate behaviors and reduce the occurrence of aggressive incidents.",
+              "normalized_text": "**positive behavioral supports**: use positive behavioral interventions to encourage appropriate behaviors and reduce the occurrence of aggressive incidents.",
+              "looks_like_claim": true,
+              "claim_type": "behavior",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_012"
+            },
+            {
+              "unit_index": 29,
+              "source_text": "**Structured Environment**: Maintain a structured and predictable classroom environment to help John feel secure and reduce anxiety that may lead to behavioral issues.",
+              "normalized_text": "**structured environment**: maintain a structured and predictable classroom environment to help john feel secure and reduce anxiety that may lead to behavioral issues.",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 30,
+              "source_text": "**Peer Interaction**: Facilitate opportunities for John to interact with peers in a supportive and supervised manner to improve his social skills and reduce isolation.",
+              "normalized_text": "**peer interaction**: facilitate opportunities for john to interact with peers in a supportive and supervised manner to improve his social skills and reduce isolation.",
+              "looks_like_claim": true,
+              "claim_type": "safety",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_013"
+            },
+            {
+              "unit_index": 31,
+              "source_text": "By focusing on these areas, you can provide comprehensive support that addresses both John\u2019s academic and behavioral needs, helping him to thrive in his educational journey.",
+              "normalized_text": "by focusing on these areas, you can provide comprehensive support that addresses both john\u2019s academic and behavioral needs, helping him to thrive in his educational journey.",
+              "looks_like_claim": true,
+              "claim_type": "other",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_014"
+            }
+          ],
+          "claims": [
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_001",
+              "source_text": "When working with John Smith, who has an IEP and a Behavioral Intervention Plan (BIP), there are several key points to keep in mind to support his educational and behavioral needs effectively:",
+              "normalized_text": "when working with john smith, who has an iep and a behavioral intervention plan (bip), there are several key points to keep in mind to support his educational and behavioral needs effectively:",
+              "claim_type": "service",
+              "source_unit_index": 2
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_002",
+              "source_text": "### Individualized Education Program (IEP) Considerations:",
+              "normalized_text": "### individualized education program (iep) considerations:",
+              "claim_type": "other",
+              "source_unit_index": 3
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_003",
+              "source_text": "His IEP includes measurable annual goals in behavior regulation, functional communication, writing, and math. Regular progress monitoring is essential to track his improvements in these areas.",
+              "normalized_text": "his iep includes measurable annual goals in behavior regulation, functional communication, writing, and math. regular progress monitoring is essential to track his improvements in these areas.",
+              "claim_type": "behavior",
+              "source_unit_index": 7
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_004",
+              "source_text": "John exhibits aggressive behavior during transitions and when denied access to preferred activities. It's important to provide clear, consistent expectations and use visual supports to help him navigate transitions smoothly.",
+              "normalized_text": "john exhibits aggressive behavior during transitions and when denied access to preferred activities. it's important to provide clear, consistent expectations and use visual supports to help him navigate transitions smoothly.",
+              "claim_type": "behavior",
+              "source_unit_index": 9
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_005",
+              "source_text": "Visual schedules, timers, and an optional break-request card are part of his accommodations. Ensure these tools are consistently used to help him manage his behavior and requests for breaks.",
+              "normalized_text": "visual schedules, timers, and an optional break-request card are part of his accommodations. ensure these tools are consistently used to help him manage his behavior and requests for breaks.",
+              "claim_type": "behavior",
+              "source_unit_index": 11
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_006",
+              "source_text": "Although John is currently in 1st grade, transition planning should start considering his future goals in education, employment, and independent living. Begin introducing age-appropriate transition activities.",
+              "normalized_text": "although john is currently in 1st grade, transition planning should start considering his future goals in education, employment, and independent living. begin introducing age-appropriate transition activities.",
+              "claim_type": "recommendation",
+              "source_unit_index": 13
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_007",
+              "source_text": "John will spend 82% of his time in a general education setting, which is ideal for inclusion and peer interaction. Support his participation in general education activities while providing necessary accommodations.",
+              "normalized_text": "john will spend 82% of his time in a general education setting, which is ideal for inclusion and peer interaction. support his participation in general education activities while providing necessary accommodations.",
+              "claim_type": "other",
+              "source_unit_index": 15
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_008",
+              "source_text": "### Behavioral Intervention Plan (BIP) Considerations:",
+              "normalized_text": "### behavioral intervention plan (bip) considerations:",
+              "claim_type": "service",
+              "source_unit_index": 16
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_009",
+              "source_text": "John\u2019s aggressive and disruptive behaviors typically occur during transitions and when denied access to preferred activities. Understanding these triggers is crucial for developing effective interventions.",
+              "normalized_text": "john\u2019s aggressive and disruptive behaviors typically occur during transitions and when denied access to preferred activities. understanding these triggers is crucial for developing effective interventions.",
+              "claim_type": "behavior",
+              "source_unit_index": 18
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_010",
+              "source_text": "Ensure that all staff involved in John\u2019s education and behavior management are trained and have access to the BIP. Consistent implementation across all settings is key to the success of the BIP.",
+              "normalized_text": "ensure that all staff involved in john\u2019s education and behavior management are trained and have access to the bip. consistent implementation across all settings is key to the success of the bip.",
+              "claim_type": "service",
+              "source_unit_index": 24
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_011",
+              "source_text": "Daily behavior frequency data collection and weekly reviews by the case manager and BCBA will help monitor progress and make data-driven adjustments to the BIP as needed.",
+              "normalized_text": "daily behavior frequency data collection and weekly reviews by the case manager and bcba will help monitor progress and make data-driven adjustments to the bip as needed.",
+              "claim_type": "service",
+              "source_unit_index": 26
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_012",
+              "source_text": "**Positive Behavioral Supports**: Use positive behavioral interventions to encourage appropriate behaviors and reduce the occurrence of aggressive incidents.",
+              "normalized_text": "**positive behavioral supports**: use positive behavioral interventions to encourage appropriate behaviors and reduce the occurrence of aggressive incidents.",
+              "claim_type": "behavior",
+              "source_unit_index": 28
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_013",
+              "source_text": "**Peer Interaction**: Facilitate opportunities for John to interact with peers in a supportive and supervised manner to improve his social skills and reduce isolation.",
+              "normalized_text": "**peer interaction**: facilitate opportunities for john to interact with peers in a supportive and supervised manner to improve his social skills and reduce isolation.",
+              "claim_type": "safety",
+              "source_unit_index": 30
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_1_014",
+              "source_text": "By focusing on these areas, you can provide comprehensive support that addresses both John\u2019s academic and behavioral needs, helping him to thrive in his educational journey.",
+              "normalized_text": "by focusing on these areas, you can provide comprehensive support that addresses both john\u2019s academic and behavioral needs, helping him to thrive in his educational journey.",
+              "claim_type": "other",
+              "source_unit_index": 31
+            }
+          ],
+          "field_results": [
+            {
+              "field_name": "aggression_present",
+              "field_label": "Aggression present",
+              "scored_in_prompt": true,
+              "predicted": true,
+              "ground_truth": true,
+              "is_match": true,
+              "positive_hits": "aggressive",
+              "negative_hits": "",
+              "matched_positive_patterns": "\\baggressive\\b",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "self_injury_present",
+              "field_label": "Self-injury present",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": true,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "property_destruction_present",
+              "field_label": "Property destruction present",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": true,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "elopement_present",
+              "field_label": "Elopement present",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": true,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "task_refusal_present",
+              "field_label": "Task refusal present",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": true,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "verbal_disruption_present",
+              "field_label": "Verbal disruption present",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": true,
+              "is_match": false,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "behavior_frequency_numeric_present",
+              "field_label": "Behavior frequency data present",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": true,
+              "is_match": false,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "behavior_duration_numeric_present",
+              "field_label": "Behavior duration data present",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": true,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "baseline_data_present",
+              "field_label": "Baseline data present",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": true,
+              "is_match": false,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "function_escape_stated",
+              "field_label": "Escape function stated",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": true,
+              "is_match": false,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "function_attention_stated",
+              "field_label": "Attention function stated",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": true,
+              "is_match": false,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "function_tangible_stated",
+              "field_label": "Tangible function stated",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": true,
+              "is_match": false,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "function_sensory_stated",
+              "field_label": "Sensory function stated",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": true,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "bip_exists",
+              "field_label": "BIP exists",
+              "scored_in_prompt": true,
+              "predicted": true,
+              "ground_truth": true,
+              "is_match": true,
+              "positive_hits": "bip",
+              "negative_hits": "",
+              "matched_positive_patterns": "\\bbip\\b",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "fba_completed_stated",
+              "field_label": "FBA completed stated",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": true,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "speech_services_present",
+              "field_label": "Speech services present",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": true,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "ot_services_present",
+              "field_label": "OT services present",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": true,
+              "is_match": false,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "visual_schedule_accommodation",
+              "field_label": "Visual schedule accommodation",
+              "scored_in_prompt": true,
+              "predicted": true,
+              "ground_truth": true,
+              "is_match": true,
+              "positive_hits": "visual supports",
+              "negative_hits": "",
+              "matched_positive_patterns": "\\bvisual supports?\\b",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "break_access_accommodation",
+              "field_label": "Break access accommodation",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": true,
+              "is_match": false,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "reduced_workload_accommodation",
+              "field_label": "Reduced workload accommodation",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": true,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "safety_plan_present",
+              "field_label": "Safety plan present",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": true,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "restraint_or_isolation_flagged",
+              "field_label": "Restraint or isolation flagged",
+              "scored_in_prompt": true,
+              "predicted": true,
+              "ground_truth": false,
+              "is_match": false,
+              "positive_hits": "isolation",
+              "negative_hits": "",
+              "matched_positive_patterns": "\\bisolation\\b",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "ratio_1to1_explicitly_stated",
+              "field_label": "1:1 ratio explicitly stated",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": true,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "ratio_2to1_explicitly_stated",
+              "field_label": "2:1 ratio explicitly stated",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": true,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            }
+          ]
+        },
+        {
+          "result_id": "CASE001__us.amazon.nova-micro-v1_0__prompt_2__2026-07-06T20:13:24.785368",
+          "timestamp": "2026-07-06T20:13:24.785368",
+          "case_id": "CASE001",
+          "model_name": "us.amazon.nova-micro-v1:0",
+          "prompt_id": "prompt_2",
+          "prompt_label": "Behavior and supports summary",
+          "accuracy_percent": 89.47,
+          "correct_scored_fields": 17,
+          "scored_field_count": 19,
+          "abstention_detected": false,
+          "abstention_hits": "",
+          "raw_response": "Certainly! Based on the documents provided, here's an overview of the student's behavior and the supports and interventions in place:\n\n### Understanding the Student's Behavior\n\n**Student Name:** John Smith\n\n**Behavioral Profile:**\n- **Pattern of Behavior:** John exhibits aggressive and disruptive behaviors, particularly during transitions and when denied access to preferred activities. These behaviors include yelling, making negative verbal statements, hitting peers, staff-directed aggression, and physical aggression such as throwing his body against furniture.\n- **Frequency and Severity:** These incidents occur 3-5 times per week, sometimes daily, and range from verbal disruptions to physical aggression.\n- **Function of Behavior:** The behavior seems to function as an escape from non-preferred academic or social demands and as a means to gain access to preferred activities or adult attention.\n- **Triggers:** The behavior is most likely to occur during transitions, when denied access to preferred items (like a tablet or fish-related content), required to participate in non-preferred activities, multi-step academic tasks, and when he is physically fatigued.\n\n### Supports and Interventions in Place\n\n**Behavioral Intervention Plan (BIP):**\n- **Alternative Behaviors:** John is being taught alternative behaviors to replace the aggressive and disruptive ones. These include:\n  - Requesting a break appropriately using verbal language or a break card.\n  - Asking for help when frustrated.\n  - Using coping strategies like deep breathing, counting, or using a sensory tool.\n  - Accepting \"no\" or delayed access with the support of a visual timer.\n  - Transitioning within one prompt without physical aggression.\n- **Instructional Delivery:** Instruction occurs during:\n  - 60 minutes of behavioral instruction per week.\n  - Daily classroom practice with adult prompting.\n  - Occupational therapy (OT) sessions to support regulation strategies.\n- **Reinforcers:** Desired behaviors will be reinforced using:\n  - Immediate specific verbal praise.\n  - A fish-themed token system where 5 tokens can be exchanged for 5 minutes of fish drawing or watching a fish video.\n  - Access to preferred coloring activities.\n  - Positive notes home.\n  - Small edible reinforcers (pre-approved by parents).\n- **Consistency of Implementation:** To ensure consistency:\n  - Behavior frequency data is collected daily by classroom staff.\n  - Weekly review of behavior data by the case manager and the Behavior Consultant (BCBA).\n  - Quarterly progress review aligned with IEP progress reports.\n  - Staff training on transition supports, prompt hierarchy, and reinforcement delivery.\n  - All staff working with John have a copy of the BIP.\n  - BIP effectiveness is formally reviewed every 6 weeks with adjustments made based on data trends.\n\nThese interventions aim to provide John with appropriate ways to cope with frustration and transitions, reinforce positive behaviors, and reduce the occurrence of aggressive and disruptive behaviors.",
+          "prompt_text": "I'm reviewing a student's IEP and behavior plan documents and trying to make sure I understand their behavior needs.\n\nFor the student below, can you explain:\n\n- what you understand about the student's behavior\n- what supports or interventions are currently in place",
+          "predicted_fields": {
+            "aggression_present": true,
+            "self_injury_present": false,
+            "property_destruction_present": false,
+            "elopement_present": false,
+            "task_refusal_present": false,
+            "verbal_disruption_present": true,
+            "behavior_frequency_numeric_present": true,
+            "behavior_duration_numeric_present": true,
+            "baseline_data_present": false,
+            "function_escape_stated": true,
+            "function_attention_stated": true,
+            "function_tangible_stated": true,
+            "function_sensory_stated": true,
+            "bip_exists": true,
+            "fba_completed_stated": false,
+            "speech_services_present": false,
+            "ot_services_present": true,
+            "visual_schedule_accommodation": false,
+            "break_access_accommodation": true,
+            "reduced_workload_accommodation": false,
+            "safety_plan_present": false,
+            "restraint_or_isolation_flagged": false,
+            "ratio_1to1_explicitly_stated": false,
+            "ratio_2to1_explicitly_stated": false
+          },
+          "matches": {
+            "aggression_present": true,
+            "self_injury_present": true,
+            "property_destruction_present": true,
+            "elopement_present": true,
+            "task_refusal_present": true,
+            "verbal_disruption_present": true,
+            "behavior_frequency_numeric_present": null,
+            "behavior_duration_numeric_present": null,
+            "baseline_data_present": null,
+            "function_escape_stated": true,
+            "function_attention_stated": true,
+            "function_tangible_stated": true,
+            "function_sensory_stated": false,
+            "bip_exists": true,
+            "fba_completed_stated": true,
+            "speech_services_present": true,
+            "ot_services_present": true,
+            "visual_schedule_accommodation": false,
+            "break_access_accommodation": true,
+            "reduced_workload_accommodation": true,
+            "safety_plan_present": true,
+            "restraint_or_isolation_flagged": true,
+            "ratio_1to1_explicitly_stated": null,
+            "ratio_2to1_explicitly_stated": null
+          },
+          "claim_count": 23,
+          "source_unit_count": 35,
+          "claims_by_type": {
+            "accommodation": 2,
+            "behavior": 9,
+            "function": 2,
+            "other": 6,
+            "service": 4
+          },
+          "claim_units": [
+            {
+              "unit_index": 1,
+              "source_text": "Certainly!",
+              "normalized_text": "certainly!",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 2,
+              "source_text": "Based on the documents provided, here's an overview of the student's behavior and the supports and interventions in place:",
+              "normalized_text": "based on the documents provided, here's an overview of the student's behavior and the supports and interventions in place:",
+              "looks_like_claim": true,
+              "claim_type": "behavior",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_001"
+            },
+            {
+              "unit_index": 3,
+              "source_text": "### Understanding the Student's Behavior",
+              "normalized_text": "### understanding the student's behavior",
+              "looks_like_claim": true,
+              "claim_type": "behavior",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_002"
+            },
+            {
+              "unit_index": 4,
+              "source_text": "Student Name:** John Smith",
+              "normalized_text": "student name:** john smith",
+              "looks_like_claim": true,
+              "claim_type": "other",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_003"
+            },
+            {
+              "unit_index": 5,
+              "source_text": "Behavioral Profile:**",
+              "normalized_text": "behavioral profile:**",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 6,
+              "source_text": "**Pattern of Behavior:** John exhibits aggressive and disruptive behaviors, particularly during transitions and when denied access to preferred activities. These behaviors include yelling, making negative verbal statements, hitting peers, staff-directed aggression, and physical aggression such as throwing his body against furniture.",
+              "normalized_text": "**pattern of behavior:** john exhibits aggressive and disruptive behaviors, particularly during transitions and when denied access to preferred activities. these behaviors include yelling, making negative verbal statements, hitting peers, staff-directed aggression, and physical aggression such as throwing his body against furniture.",
+              "looks_like_claim": true,
+              "claim_type": "behavior",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_004"
+            },
+            {
+              "unit_index": 7,
+              "source_text": "**Frequency and Severity:** These incidents occur 3-5 times per week, sometimes daily, and range from verbal disruptions to physical aggression.",
+              "normalized_text": "**frequency and severity:** these incidents occur 3-5 times per week, sometimes daily, and range from verbal disruptions to physical aggression.",
+              "looks_like_claim": true,
+              "claim_type": "behavior",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_005"
+            },
+            {
+              "unit_index": 8,
+              "source_text": "**Function of Behavior:** The behavior seems to function as an escape from non-preferred academic or social demands and as a means to gain access to preferred activities or adult attention.",
+              "normalized_text": "**function of behavior:** the behavior seems to function as an escape from non-preferred academic or social demands and as a means to gain access to preferred activities or adult attention.",
+              "looks_like_claim": true,
+              "claim_type": "function",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_006"
+            },
+            {
+              "unit_index": 9,
+              "source_text": "**Triggers:** The behavior is most likely to occur during transitions, when denied access to preferred items (like a tablet or fish-related content), required to participate in non-preferred activities, multi-step academic tasks, and when he is physically fatigued.",
+              "normalized_text": "**triggers:** the behavior is most likely to occur during transitions, when denied access to preferred items (like a tablet or fish-related content), required to participate in non-preferred activities, multi-step academic tasks, and when he is physically fatigued.",
+              "looks_like_claim": true,
+              "claim_type": "behavior",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_007"
+            },
+            {
+              "unit_index": 10,
+              "source_text": "### Supports and Interventions in Place",
+              "normalized_text": "### supports and interventions in place",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 11,
+              "source_text": "Behavioral Intervention Plan (BIP):**",
+              "normalized_text": "behavioral intervention plan (bip):**",
+              "looks_like_claim": true,
+              "claim_type": "service",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_008"
+            },
+            {
+              "unit_index": 12,
+              "source_text": "**Alternative Behaviors:** John is being taught alternative behaviors to replace the aggressive and disruptive ones. These include:",
+              "normalized_text": "**alternative behaviors:** john is being taught alternative behaviors to replace the aggressive and disruptive ones. these include:",
+              "looks_like_claim": true,
+              "claim_type": "behavior",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_009"
+            },
+            {
+              "unit_index": 13,
+              "source_text": "Requesting a break appropriately using verbal language or a break card.",
+              "normalized_text": "requesting a break appropriately using verbal language or a break card.",
+              "looks_like_claim": true,
+              "claim_type": "accommodation",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_010"
+            },
+            {
+              "unit_index": 14,
+              "source_text": "Asking for help when frustrated.",
+              "normalized_text": "asking for help when frustrated.",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 15,
+              "source_text": "Using coping strategies like deep breathing, counting, or using a sensory tool.",
+              "normalized_text": "using coping strategies like deep breathing, counting, or using a sensory tool.",
+              "looks_like_claim": true,
+              "claim_type": "function",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_011"
+            },
+            {
+              "unit_index": 16,
+              "source_text": "Accepting \"no\" or delayed access with the support of a visual timer.",
+              "normalized_text": "accepting \"no\" or delayed access with the support of a visual timer.",
+              "looks_like_claim": true,
+              "claim_type": "accommodation",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_012"
+            },
+            {
+              "unit_index": 17,
+              "source_text": "Transitioning within one prompt without physical aggression.",
+              "normalized_text": "transitioning within one prompt without physical aggression.",
+              "looks_like_claim": true,
+              "claim_type": "behavior",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_013"
+            },
+            {
+              "unit_index": 18,
+              "source_text": "**Instructional Delivery:** Instruction occurs during:",
+              "normalized_text": "**instructional delivery:** instruction occurs during:",
+              "looks_like_claim": true,
+              "claim_type": "other",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_014"
+            },
+            {
+              "unit_index": 19,
+              "source_text": "60 minutes of behavioral instruction per week.",
+              "normalized_text": "60 minutes of behavioral instruction per week.",
+              "looks_like_claim": true,
+              "claim_type": "other",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_015"
+            },
+            {
+              "unit_index": 20,
+              "source_text": "Daily classroom practice with adult prompting.",
+              "normalized_text": "daily classroom practice with adult prompting.",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 21,
+              "source_text": "Occupational therapy (OT) sessions to support regulation strategies.",
+              "normalized_text": "occupational therapy (ot) sessions to support regulation strategies.",
+              "looks_like_claim": true,
+              "claim_type": "service",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_016"
+            },
+            {
+              "unit_index": 22,
+              "source_text": "**Reinforcers:** Desired behaviors will be reinforced using:",
+              "normalized_text": "**reinforcers:** desired behaviors will be reinforced using:",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 23,
+              "source_text": "Immediate specific verbal praise.",
+              "normalized_text": "immediate specific verbal praise.",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 24,
+              "source_text": "A fish-themed token system where 5 tokens can be exchanged for 5 minutes of fish drawing or watching a fish video.",
+              "normalized_text": "a fish-themed token system where 5 tokens can be exchanged for 5 minutes of fish drawing or watching a fish video.",
+              "looks_like_claim": true,
+              "claim_type": "other",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_017"
+            },
+            {
+              "unit_index": 25,
+              "source_text": "Access to preferred coloring activities.",
+              "normalized_text": "access to preferred coloring activities.",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 26,
+              "source_text": "Positive notes home.",
+              "normalized_text": "positive notes home.",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 27,
+              "source_text": "Small edible reinforcers (pre-approved by parents).",
+              "normalized_text": "small edible reinforcers (pre-approved by parents).",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 28,
+              "source_text": "**Consistency of Implementation:** To ensure consistency:",
+              "normalized_text": "**consistency of implementation:** to ensure consistency:",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            },
+            {
+              "unit_index": 29,
+              "source_text": "Behavior frequency data is collected daily by classroom staff.",
+              "normalized_text": "behavior frequency data is collected daily by classroom staff.",
+              "looks_like_claim": true,
+              "claim_type": "behavior",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_018"
+            },
+            {
+              "unit_index": 30,
+              "source_text": "Weekly review of behavior data by the case manager and the Behavior Consultant (BCBA).",
+              "normalized_text": "weekly review of behavior data by the case manager and the behavior consultant (bcba).",
+              "looks_like_claim": true,
+              "claim_type": "behavior",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_019"
+            },
+            {
+              "unit_index": 31,
+              "source_text": "Quarterly progress review aligned with IEP progress reports.",
+              "normalized_text": "quarterly progress review aligned with iep progress reports.",
+              "looks_like_claim": true,
+              "claim_type": "other",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_020"
+            },
+            {
+              "unit_index": 32,
+              "source_text": "Staff training on transition supports, prompt hierarchy, and reinforcement delivery.",
+              "normalized_text": "staff training on transition supports, prompt hierarchy, and reinforcement delivery.",
+              "looks_like_claim": true,
+              "claim_type": "other",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_021"
+            },
+            {
+              "unit_index": 33,
+              "source_text": "All staff working with John have a copy of the BIP.",
+              "normalized_text": "all staff working with john have a copy of the bip.",
+              "looks_like_claim": true,
+              "claim_type": "service",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_022"
+            },
+            {
+              "unit_index": 34,
+              "source_text": "BIP effectiveness is formally reviewed every 6 weeks with adjustments made based on data trends.",
+              "normalized_text": "bip effectiveness is formally reviewed every 6 weeks with adjustments made based on data trends.",
+              "looks_like_claim": true,
+              "claim_type": "service",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_023"
+            },
+            {
+              "unit_index": 35,
+              "source_text": "These interventions aim to provide John with appropriate ways to cope with frustration and transitions, reinforce positive behaviors, and reduce the occurrence of aggressive and disruptive behaviors.",
+              "normalized_text": "these interventions aim to provide john with appropriate ways to cope with frustration and transitions, reinforce positive behaviors, and reduce the occurrence of aggressive and disruptive behaviors.",
+              "looks_like_claim": false,
+              "claim_type": null,
+              "claim_id": null
+            }
+          ],
+          "claims": [
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_001",
+              "source_text": "Based on the documents provided, here's an overview of the student's behavior and the supports and interventions in place:",
+              "normalized_text": "based on the documents provided, here's an overview of the student's behavior and the supports and interventions in place:",
+              "claim_type": "behavior",
+              "source_unit_index": 2
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_002",
+              "source_text": "### Understanding the Student's Behavior",
+              "normalized_text": "### understanding the student's behavior",
+              "claim_type": "behavior",
+              "source_unit_index": 3
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_003",
+              "source_text": "Student Name:** John Smith",
+              "normalized_text": "student name:** john smith",
+              "claim_type": "other",
+              "source_unit_index": 4
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_004",
+              "source_text": "**Pattern of Behavior:** John exhibits aggressive and disruptive behaviors, particularly during transitions and when denied access to preferred activities. These behaviors include yelling, making negative verbal statements, hitting peers, staff-directed aggression, and physical aggression such as throwing his body against furniture.",
+              "normalized_text": "**pattern of behavior:** john exhibits aggressive and disruptive behaviors, particularly during transitions and when denied access to preferred activities. these behaviors include yelling, making negative verbal statements, hitting peers, staff-directed aggression, and physical aggression such as throwing his body against furniture.",
+              "claim_type": "behavior",
+              "source_unit_index": 6
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_005",
+              "source_text": "**Frequency and Severity:** These incidents occur 3-5 times per week, sometimes daily, and range from verbal disruptions to physical aggression.",
+              "normalized_text": "**frequency and severity:** these incidents occur 3-5 times per week, sometimes daily, and range from verbal disruptions to physical aggression.",
+              "claim_type": "behavior",
+              "source_unit_index": 7
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_006",
+              "source_text": "**Function of Behavior:** The behavior seems to function as an escape from non-preferred academic or social demands and as a means to gain access to preferred activities or adult attention.",
+              "normalized_text": "**function of behavior:** the behavior seems to function as an escape from non-preferred academic or social demands and as a means to gain access to preferred activities or adult attention.",
+              "claim_type": "function",
+              "source_unit_index": 8
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_007",
+              "source_text": "**Triggers:** The behavior is most likely to occur during transitions, when denied access to preferred items (like a tablet or fish-related content), required to participate in non-preferred activities, multi-step academic tasks, and when he is physically fatigued.",
+              "normalized_text": "**triggers:** the behavior is most likely to occur during transitions, when denied access to preferred items (like a tablet or fish-related content), required to participate in non-preferred activities, multi-step academic tasks, and when he is physically fatigued.",
+              "claim_type": "behavior",
+              "source_unit_index": 9
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_008",
+              "source_text": "Behavioral Intervention Plan (BIP):**",
+              "normalized_text": "behavioral intervention plan (bip):**",
+              "claim_type": "service",
+              "source_unit_index": 11
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_009",
+              "source_text": "**Alternative Behaviors:** John is being taught alternative behaviors to replace the aggressive and disruptive ones. These include:",
+              "normalized_text": "**alternative behaviors:** john is being taught alternative behaviors to replace the aggressive and disruptive ones. these include:",
+              "claim_type": "behavior",
+              "source_unit_index": 12
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_010",
+              "source_text": "Requesting a break appropriately using verbal language or a break card.",
+              "normalized_text": "requesting a break appropriately using verbal language or a break card.",
+              "claim_type": "accommodation",
+              "source_unit_index": 13
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_011",
+              "source_text": "Using coping strategies like deep breathing, counting, or using a sensory tool.",
+              "normalized_text": "using coping strategies like deep breathing, counting, or using a sensory tool.",
+              "claim_type": "function",
+              "source_unit_index": 15
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_012",
+              "source_text": "Accepting \"no\" or delayed access with the support of a visual timer.",
+              "normalized_text": "accepting \"no\" or delayed access with the support of a visual timer.",
+              "claim_type": "accommodation",
+              "source_unit_index": 16
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_013",
+              "source_text": "Transitioning within one prompt without physical aggression.",
+              "normalized_text": "transitioning within one prompt without physical aggression.",
+              "claim_type": "behavior",
+              "source_unit_index": 17
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_014",
+              "source_text": "**Instructional Delivery:** Instruction occurs during:",
+              "normalized_text": "**instructional delivery:** instruction occurs during:",
+              "claim_type": "other",
+              "source_unit_index": 18
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_015",
+              "source_text": "60 minutes of behavioral instruction per week.",
+              "normalized_text": "60 minutes of behavioral instruction per week.",
+              "claim_type": "other",
+              "source_unit_index": 19
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_016",
+              "source_text": "Occupational therapy (OT) sessions to support regulation strategies.",
+              "normalized_text": "occupational therapy (ot) sessions to support regulation strategies.",
+              "claim_type": "service",
+              "source_unit_index": 21
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_017",
+              "source_text": "A fish-themed token system where 5 tokens can be exchanged for 5 minutes of fish drawing or watching a fish video.",
+              "normalized_text": "a fish-themed token system where 5 tokens can be exchanged for 5 minutes of fish drawing or watching a fish video.",
+              "claim_type": "other",
+              "source_unit_index": 24
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_018",
+              "source_text": "Behavior frequency data is collected daily by classroom staff.",
+              "normalized_text": "behavior frequency data is collected daily by classroom staff.",
+              "claim_type": "behavior",
+              "source_unit_index": 29
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_019",
+              "source_text": "Weekly review of behavior data by the case manager and the Behavior Consultant (BCBA).",
+              "normalized_text": "weekly review of behavior data by the case manager and the behavior consultant (bcba).",
+              "claim_type": "behavior",
+              "source_unit_index": 30
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_020",
+              "source_text": "Quarterly progress review aligned with IEP progress reports.",
+              "normalized_text": "quarterly progress review aligned with iep progress reports.",
+              "claim_type": "other",
+              "source_unit_index": 31
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_021",
+              "source_text": "Staff training on transition supports, prompt hierarchy, and reinforcement delivery.",
+              "normalized_text": "staff training on transition supports, prompt hierarchy, and reinforcement delivery.",
+              "claim_type": "other",
+              "source_unit_index": 32
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_022",
+              "source_text": "All staff working with John have a copy of the BIP.",
+              "normalized_text": "all staff working with john have a copy of the bip.",
+              "claim_type": "service",
+              "source_unit_index": 33
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_2_023",
+              "source_text": "BIP effectiveness is formally reviewed every 6 weeks with adjustments made based on data trends.",
+              "normalized_text": "bip effectiveness is formally reviewed every 6 weeks with adjustments made based on data trends.",
+              "claim_type": "service",
+              "source_unit_index": 34
+            }
+          ],
+          "field_results": [
+            {
+              "field_name": "aggression_present",
+              "field_label": "Aggression present",
+              "scored_in_prompt": true,
+              "predicted": true,
+              "ground_truth": true,
+              "is_match": true,
+              "positive_hits": "aggression | aggressive | hitting | physical aggression",
+              "negative_hits": "",
+              "matched_positive_patterns": "\\baggression\\b | \\baggressive\\b | \\bhitting\\b | \\bphysical aggression\\b",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "self_injury_present",
+              "field_label": "Self-injury present",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": true,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "property_destruction_present",
+              "field_label": "Property destruction present",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": true,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "elopement_present",
+              "field_label": "Elopement present",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": true,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "task_refusal_present",
+              "field_label": "Task refusal present",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": true,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "verbal_disruption_present",
+              "field_label": "Verbal disruption present",
+              "scored_in_prompt": true,
+              "predicted": true,
+              "ground_truth": true,
+              "is_match": true,
+              "positive_hits": "yelling",
+              "negative_hits": "",
+              "matched_positive_patterns": "\\byelling\\b",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "behavior_frequency_numeric_present",
+              "field_label": "Behavior frequency data present",
+              "scored_in_prompt": false,
+              "predicted": true,
+              "ground_truth": true,
+              "is_match": null,
+              "positive_hits": "5 times per week | 3-5 times per week | occur 3-5",
+              "negative_hits": "",
+              "matched_positive_patterns": "\\b\\d+\\s*(times?|x|incidents?)\\s*(per|a)?\\s*(day|week|class|hour)\\b | \\b\\d+\\s*-\\s*\\d+\\s*(times?|x|incidents?)\\s*(per|a)?\\s*(day|week|class|hour)?\\b | \\boccurs?\\b[^.]{0,40}\\b\\d+\\b",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "behavior_duration_numeric_present",
+              "field_label": "Behavior duration data present",
+              "scored_in_prompt": false,
+              "predicted": true,
+              "ground_truth": false,
+              "is_match": null,
+              "positive_hits": "60 minutes",
+              "negative_hits": "",
+              "matched_positive_patterns": "\\b\\d+\\s*(minutes?|min|hours?|hrs?)\\b",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "baseline_data_present",
+              "field_label": "Baseline data present",
+              "scored_in_prompt": false,
+              "predicted": false,
+              "ground_truth": true,
+              "is_match": null,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "function_escape_stated",
+              "field_label": "Escape function stated",
+              "scored_in_prompt": true,
+              "predicted": true,
+              "ground_truth": true,
+              "is_match": true,
+              "positive_hits": "escape",
+              "negative_hits": "",
+              "matched_positive_patterns": "\\bescape\\b",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "function_attention_stated",
+              "field_label": "Attention function stated",
+              "scored_in_prompt": true,
+              "predicted": true,
+              "ground_truth": true,
+              "is_match": true,
+              "positive_hits": "attention | adult attention",
+              "negative_hits": "",
+              "matched_positive_patterns": "\\battention\\b | \\badult attention\\b",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "function_tangible_stated",
+              "field_label": "Tangible function stated",
+              "scored_in_prompt": true,
+              "predicted": true,
+              "ground_truth": true,
+              "is_match": true,
+              "positive_hits": "access to preferred items",
+              "negative_hits": "",
+              "matched_positive_patterns": "\\baccess to (items|preferred items|objects|activities)\\b",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "function_sensory_stated",
+              "field_label": "Sensory function stated",
+              "scored_in_prompt": true,
+              "predicted": true,
+              "ground_truth": false,
+              "is_match": false,
+              "positive_hits": "sensory",
+              "negative_hits": "",
+              "matched_positive_patterns": "\\bsensory\\b",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "bip_exists",
+              "field_label": "BIP exists",
+              "scored_in_prompt": true,
+              "predicted": true,
+              "ground_truth": true,
+              "is_match": true,
+              "positive_hits": "bip",
+              "negative_hits": "",
+              "matched_positive_patterns": "\\bbip\\b",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "fba_completed_stated",
+              "field_label": "FBA completed stated",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": true,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "speech_services_present",
+              "field_label": "Speech services present",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": true,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "ot_services_present",
+              "field_label": "OT services present",
+              "scored_in_prompt": true,
+              "predicted": true,
+              "ground_truth": true,
+              "is_match": true,
+              "positive_hits": "occupational therapy",
+              "negative_hits": "",
+              "matched_positive_patterns": "\\boccupational therapy\\b",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "visual_schedule_accommodation",
+              "field_label": "Visual schedule accommodation",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": true,
+              "is_match": false,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "break_access_accommodation",
+              "field_label": "Break access accommodation",
+              "scored_in_prompt": true,
+              "predicted": true,
+              "ground_truth": true,
+              "is_match": true,
+              "positive_hits": "requesting a break | break card",
+              "negative_hits": "",
+              "matched_positive_patterns": "\\brequesting a break\\b | \\bbreak card\\b",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "reduced_workload_accommodation",
+              "field_label": "Reduced workload accommodation",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": true,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "safety_plan_present",
+              "field_label": "Safety plan present",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": true,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "restraint_or_isolation_flagged",
+              "field_label": "Restraint or isolation flagged",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": true,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "ratio_1to1_explicitly_stated",
+              "field_label": "1:1 ratio explicitly stated",
+              "scored_in_prompt": false,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": null,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "ratio_2to1_explicitly_stated",
+              "field_label": "2:1 ratio explicitly stated",
+              "scored_in_prompt": false,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": null,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            }
+          ]
+        },
+        {
+          "result_id": "CASE001__us.amazon.nova-micro-v1_0__prompt_3__2026-07-06T20:13:28.785621",
+          "timestamp": "2026-07-06T20:13:28.785621",
+          "case_id": "CASE001",
+          "model_name": "us.amazon.nova-micro-v1:0",
+          "prompt_id": "prompt_3",
+          "prompt_label": "Support level recommendation",
+          "accuracy_percent": 100.0,
+          "correct_scored_fields": 2,
+          "scored_field_count": 2,
+          "abstention_detected": false,
+          "abstention_hits": "",
+          "raw_response": "Based on the information provided in the IEP and BIP documents for John Smith, I would recommend a moderate to high level of support and supervision when teaching him tomorrow. Here\u2019s my reasoning based on the details in the documents:\n\n1. **Behavioral Challenges**: John exhibits aggressive and disruptive behaviors, particularly during transitions and when denied access to preferred activities. These behaviors include yelling, verbal threats, hitting peers, and physical aggression. Given this pattern, it\u2019s crucial to have a supportive environment to help manage these behaviors effectively.\n\n2. **Behavior Intervention Plan (BIP)**: The BIP outlines specific interventions to address John\u2019s aggressive behaviors. It includes teaching alternative behaviors such as requesting breaks appropriately, using coping strategies, and transitioning without aggression. The BIP also includes reinforcement strategies like verbal praise, a token system, and access to preferred activities. For these interventions to be effective, consistent support and supervision are necessary.\n\n3. **Support Services**: John receives several support services including special education instruction, reading/writing support, math support, behavioral instruction, occupational therapy, and behavior specialist consultation. These services are designed to address both his academic and behavioral needs. A teacher would need to be aware of these services and how they integrate into daily instruction.\n\n4. **Accommodations and Modifications**: John has various accommodations and modifications in place to support his learning, such as preferential seating, visual schedules, breaks during testing, and simplified text wording. These need to be consistently applied to help John engage with the curriculum effectively.\n\n5. **Transition and Social Skills**: Transition planning is a significant part of John\u2019s IEP, focusing on improving his academic achievement and functional performance to facilitate his movement from school to post-school activities. This indicates that he might benefit from structured and supported transitions to minimize disruptions.\n\nGiven these points, it would be advisable to have a co-teacher or a teaching assistant present to provide immediate support and to implement the strategies outlined in the BIP. This setup would help in managing John\u2019s behaviors proactively and providing the necessary academic support. Additionally, clear communication with all staff involved in John\u2019s education about the BIP and the day\u2019s specific goals would be essential for consistent implementation.",
+          "prompt_text": "I'm planning instruction for a student and reviewing their IEP and BIP documents.\n\nBased on the documentation for the student below, what level of support or supervision would you recommend if I were teaching them tomorrow?\n\nPlease explain your reasoning based on the information in the documents.",
+          "predicted_fields": {
+            "aggression_present": true,
+            "self_injury_present": false,
+            "property_destruction_present": false,
+            "elopement_present": false,
+            "task_refusal_present": false,
+            "verbal_disruption_present": true,
+            "behavior_frequency_numeric_present": false,
+            "behavior_duration_numeric_present": false,
+            "baseline_data_present": false,
+            "function_escape_stated": false,
+            "function_attention_stated": false,
+            "function_tangible_stated": false,
+            "function_sensory_stated": false,
+            "bip_exists": true,
+            "fba_completed_stated": false,
+            "speech_services_present": false,
+            "ot_services_present": true,
+            "visual_schedule_accommodation": false,
+            "break_access_accommodation": false,
+            "reduced_workload_accommodation": false,
+            "safety_plan_present": false,
+            "restraint_or_isolation_flagged": false,
+            "ratio_1to1_explicitly_stated": false,
+            "ratio_2to1_explicitly_stated": false
+          },
+          "matches": {
+            "aggression_present": null,
+            "self_injury_present": null,
+            "property_destruction_present": null,
+            "elopement_present": null,
+            "task_refusal_present": null,
+            "verbal_disruption_present": null,
+            "behavior_frequency_numeric_present": null,
+            "behavior_duration_numeric_present": null,
+            "baseline_data_present": null,
+            "function_escape_stated": null,
+            "function_attention_stated": null,
+            "function_tangible_stated": null,
+            "function_sensory_stated": null,
+            "bip_exists": null,
+            "fba_completed_stated": null,
+            "speech_services_present": null,
+            "ot_services_present": null,
+            "visual_schedule_accommodation": null,
+            "break_access_accommodation": null,
+            "reduced_workload_accommodation": null,
+            "safety_plan_present": null,
+            "restraint_or_isolation_flagged": null,
+            "ratio_1to1_explicitly_stated": true,
+            "ratio_2to1_explicitly_stated": true
+          },
+          "claim_count": 10,
+          "source_unit_count": 10,
+          "claims_by_type": {
+            "behavior": 1,
+            "other": 4,
+            "service": 5
+          },
+          "claim_units": [
+            {
+              "unit_index": 1,
+              "source_text": "Based on the information provided in the IEP and BIP documents for John Smith, I would recommend a moderate to high level of support and supervision when teaching him tomorrow.",
+              "normalized_text": "based on the information provided in the iep and bip documents for john smith, i would recommend a moderate to high level of support and supervision when teaching him tomorrow.",
+              "looks_like_claim": true,
+              "claim_type": "service",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_3_001"
+            },
+            {
+              "unit_index": 2,
+              "source_text": "Here\u2019s my reasoning based on the details in the documents:",
+              "normalized_text": "here\u2019s my reasoning based on the details in the documents:",
+              "looks_like_claim": true,
+              "claim_type": "other",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_3_002"
+            },
+            {
+              "unit_index": 3,
+              "source_text": "**Behavioral Challenges**: John exhibits aggressive and disruptive behaviors, particularly during transitions and when denied access to preferred activities. These behaviors include yelling, verbal threats, hitting peers, and physical aggression. Given this pattern, it\u2019s crucial to have a supportive environment to help manage these behaviors effectively.",
+              "normalized_text": "**behavioral challenges**: john exhibits aggressive and disruptive behaviors, particularly during transitions and when denied access to preferred activities. these behaviors include yelling, verbal threats, hitting peers, and physical aggression. given this pattern, it\u2019s crucial to have a supportive environment to help manage these behaviors effectively.",
+              "looks_like_claim": true,
+              "claim_type": "behavior",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_3_003"
+            },
+            {
+              "unit_index": 4,
+              "source_text": "**Behavior Intervention Plan (BIP)**: The BIP outlines specific interventions to address John\u2019s aggressive behaviors. It includes teaching alternative behaviors such as requesting breaks appropriately, using coping strategies, and transitioning without aggression. The BIP also includes reinforcement strategies like verbal praise, a token system, and access to preferred activities. For these interventions to be effective, consistent support and supervision are necessary.",
+              "normalized_text": "**behavior intervention plan (bip)**: the bip outlines specific interventions to address john\u2019s aggressive behaviors. it includes teaching alternative behaviors such as requesting breaks appropriately, using coping strategies, and transitioning without aggression. the bip also includes reinforcement strategies like verbal praise, a token system, and access to preferred activities. for these interventions to be effective, consistent support and supervision are necessary.",
+              "looks_like_claim": true,
+              "claim_type": "service",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_3_004"
+            },
+            {
+              "unit_index": 5,
+              "source_text": "**Support Services**: John receives several support services including special education instruction, reading/writing support, math support, behavioral instruction, occupational therapy, and behavior specialist consultation. These services are designed to address both his academic and behavioral needs. A teacher would need to be aware of these services and how they integrate into daily instruction.",
+              "normalized_text": "**support services**: john receives several support services including special education instruction, reading/writing support, math support, behavioral instruction, occupational therapy, and behavior specialist consultation. these services are designed to address both his academic and behavioral needs. a teacher would need to be aware of these services and how they integrate into daily instruction.",
+              "looks_like_claim": true,
+              "claim_type": "service",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_3_005"
+            },
+            {
+              "unit_index": 6,
+              "source_text": "**Accommodations and Modifications**: John has various accommodations and modifications in place to support his learning, such as preferential seating, visual schedules, breaks during testing, and simplified text wording. These need to be consistently applied to help John engage with the curriculum effectively.",
+              "normalized_text": "**accommodations and modifications**: john has various accommodations and modifications in place to support his learning, such as preferential seating, visual schedules, breaks during testing, and simplified text wording. these need to be consistently applied to help john engage with the curriculum effectively.",
+              "looks_like_claim": true,
+              "claim_type": "other",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_3_006"
+            },
+            {
+              "unit_index": 7,
+              "source_text": "**Transition and Social Skills**: Transition planning is a significant part of John\u2019s IEP, focusing on improving his academic achievement and functional performance to facilitate his movement from school to post-school activities. This indicates that he might benefit from structured and supported transitions to minimize disruptions.",
+              "normalized_text": "**transition and social skills**: transition planning is a significant part of john\u2019s iep, focusing on improving his academic achievement and functional performance to facilitate his movement from school to post-school activities. this indicates that he might benefit from structured and supported transitions to minimize disruptions.",
+              "looks_like_claim": true,
+              "claim_type": "other",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_3_007"
+            },
+            {
+              "unit_index": 8,
+              "source_text": "Given these points, it would be advisable to have a co-teacher or a teaching assistant present to provide immediate support and to implement the strategies outlined in the BIP.",
+              "normalized_text": "given these points, it would be advisable to have a co-teacher or a teaching assistant present to provide immediate support and to implement the strategies outlined in the bip.",
+              "looks_like_claim": true,
+              "claim_type": "service",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_3_008"
+            },
+            {
+              "unit_index": 9,
+              "source_text": "This setup would help in managing John\u2019s behaviors proactively and providing the necessary academic support.",
+              "normalized_text": "this setup would help in managing john\u2019s behaviors proactively and providing the necessary academic support.",
+              "looks_like_claim": true,
+              "claim_type": "other",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_3_009"
+            },
+            {
+              "unit_index": 10,
+              "source_text": "Additionally, clear communication with all staff involved in John\u2019s education about the BIP and the day\u2019s specific goals would be essential for consistent implementation.",
+              "normalized_text": "additionally, clear communication with all staff involved in john\u2019s education about the bip and the day\u2019s specific goals would be essential for consistent implementation.",
+              "looks_like_claim": true,
+              "claim_type": "service",
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_3_010"
+            }
+          ],
+          "claims": [
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_3_001",
+              "source_text": "Based on the information provided in the IEP and BIP documents for John Smith, I would recommend a moderate to high level of support and supervision when teaching him tomorrow.",
+              "normalized_text": "based on the information provided in the iep and bip documents for john smith, i would recommend a moderate to high level of support and supervision when teaching him tomorrow.",
+              "claim_type": "service",
+              "source_unit_index": 1
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_3_002",
+              "source_text": "Here\u2019s my reasoning based on the details in the documents:",
+              "normalized_text": "here\u2019s my reasoning based on the details in the documents:",
+              "claim_type": "other",
+              "source_unit_index": 2
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_3_003",
+              "source_text": "**Behavioral Challenges**: John exhibits aggressive and disruptive behaviors, particularly during transitions and when denied access to preferred activities. These behaviors include yelling, verbal threats, hitting peers, and physical aggression. Given this pattern, it\u2019s crucial to have a supportive environment to help manage these behaviors effectively.",
+              "normalized_text": "**behavioral challenges**: john exhibits aggressive and disruptive behaviors, particularly during transitions and when denied access to preferred activities. these behaviors include yelling, verbal threats, hitting peers, and physical aggression. given this pattern, it\u2019s crucial to have a supportive environment to help manage these behaviors effectively.",
+              "claim_type": "behavior",
+              "source_unit_index": 3
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_3_004",
+              "source_text": "**Behavior Intervention Plan (BIP)**: The BIP outlines specific interventions to address John\u2019s aggressive behaviors. It includes teaching alternative behaviors such as requesting breaks appropriately, using coping strategies, and transitioning without aggression. The BIP also includes reinforcement strategies like verbal praise, a token system, and access to preferred activities. For these interventions to be effective, consistent support and supervision are necessary.",
+              "normalized_text": "**behavior intervention plan (bip)**: the bip outlines specific interventions to address john\u2019s aggressive behaviors. it includes teaching alternative behaviors such as requesting breaks appropriately, using coping strategies, and transitioning without aggression. the bip also includes reinforcement strategies like verbal praise, a token system, and access to preferred activities. for these interventions to be effective, consistent support and supervision are necessary.",
+              "claim_type": "service",
+              "source_unit_index": 4
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_3_005",
+              "source_text": "**Support Services**: John receives several support services including special education instruction, reading/writing support, math support, behavioral instruction, occupational therapy, and behavior specialist consultation. These services are designed to address both his academic and behavioral needs. A teacher would need to be aware of these services and how they integrate into daily instruction.",
+              "normalized_text": "**support services**: john receives several support services including special education instruction, reading/writing support, math support, behavioral instruction, occupational therapy, and behavior specialist consultation. these services are designed to address both his academic and behavioral needs. a teacher would need to be aware of these services and how they integrate into daily instruction.",
+              "claim_type": "service",
+              "source_unit_index": 5
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_3_006",
+              "source_text": "**Accommodations and Modifications**: John has various accommodations and modifications in place to support his learning, such as preferential seating, visual schedules, breaks during testing, and simplified text wording. These need to be consistently applied to help John engage with the curriculum effectively.",
+              "normalized_text": "**accommodations and modifications**: john has various accommodations and modifications in place to support his learning, such as preferential seating, visual schedules, breaks during testing, and simplified text wording. these need to be consistently applied to help john engage with the curriculum effectively.",
+              "claim_type": "other",
+              "source_unit_index": 6
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_3_007",
+              "source_text": "**Transition and Social Skills**: Transition planning is a significant part of John\u2019s IEP, focusing on improving his academic achievement and functional performance to facilitate his movement from school to post-school activities. This indicates that he might benefit from structured and supported transitions to minimize disruptions.",
+              "normalized_text": "**transition and social skills**: transition planning is a significant part of john\u2019s iep, focusing on improving his academic achievement and functional performance to facilitate his movement from school to post-school activities. this indicates that he might benefit from structured and supported transitions to minimize disruptions.",
+              "claim_type": "other",
+              "source_unit_index": 7
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_3_008",
+              "source_text": "Given these points, it would be advisable to have a co-teacher or a teaching assistant present to provide immediate support and to implement the strategies outlined in the BIP.",
+              "normalized_text": "given these points, it would be advisable to have a co-teacher or a teaching assistant present to provide immediate support and to implement the strategies outlined in the bip.",
+              "claim_type": "service",
+              "source_unit_index": 8
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_3_009",
+              "source_text": "This setup would help in managing John\u2019s behaviors proactively and providing the necessary academic support.",
+              "normalized_text": "this setup would help in managing john\u2019s behaviors proactively and providing the necessary academic support.",
+              "claim_type": "other",
+              "source_unit_index": 9
+            },
+            {
+              "claim_id": "CASE001__us.amazon.nova-micro-v1:0__prompt_3_010",
+              "source_text": "Additionally, clear communication with all staff involved in John\u2019s education about the BIP and the day\u2019s specific goals would be essential for consistent implementation.",
+              "normalized_text": "additionally, clear communication with all staff involved in john\u2019s education about the bip and the day\u2019s specific goals would be essential for consistent implementation.",
+              "claim_type": "service",
+              "source_unit_index": 10
+            }
+          ],
+          "field_results": [
+            {
+              "field_name": "aggression_present",
+              "field_label": "Aggression present",
+              "scored_in_prompt": false,
+              "predicted": true,
+              "ground_truth": true,
+              "is_match": null,
+              "positive_hits": "aggression | aggressive | hitting | physical aggression",
+              "negative_hits": "",
+              "matched_positive_patterns": "\\baggression\\b | \\baggressive\\b | \\bhitting\\b | \\bphysical aggression\\b",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "self_injury_present",
+              "field_label": "Self-injury present",
+              "scored_in_prompt": false,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": null,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "property_destruction_present",
+              "field_label": "Property destruction present",
+              "scored_in_prompt": false,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": null,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "elopement_present",
+              "field_label": "Elopement present",
+              "scored_in_prompt": false,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": null,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "task_refusal_present",
+              "field_label": "Task refusal present",
+              "scored_in_prompt": false,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": null,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "verbal_disruption_present",
+              "field_label": "Verbal disruption present",
+              "scored_in_prompt": false,
+              "predicted": true,
+              "ground_truth": true,
+              "is_match": null,
+              "positive_hits": "yelling",
+              "negative_hits": "",
+              "matched_positive_patterns": "\\byelling\\b",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "behavior_frequency_numeric_present",
+              "field_label": "Behavior frequency data present",
+              "scored_in_prompt": false,
+              "predicted": false,
+              "ground_truth": true,
+              "is_match": null,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "behavior_duration_numeric_present",
+              "field_label": "Behavior duration data present",
+              "scored_in_prompt": false,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": null,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "baseline_data_present",
+              "field_label": "Baseline data present",
+              "scored_in_prompt": false,
+              "predicted": false,
+              "ground_truth": true,
+              "is_match": null,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "function_escape_stated",
+              "field_label": "Escape function stated",
+              "scored_in_prompt": false,
+              "predicted": false,
+              "ground_truth": true,
+              "is_match": null,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "function_attention_stated",
+              "field_label": "Attention function stated",
+              "scored_in_prompt": false,
+              "predicted": false,
+              "ground_truth": true,
+              "is_match": null,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "function_tangible_stated",
+              "field_label": "Tangible function stated",
+              "scored_in_prompt": false,
+              "predicted": false,
+              "ground_truth": true,
+              "is_match": null,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "function_sensory_stated",
+              "field_label": "Sensory function stated",
+              "scored_in_prompt": false,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": null,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "bip_exists",
+              "field_label": "BIP exists",
+              "scored_in_prompt": false,
+              "predicted": true,
+              "ground_truth": true,
+              "is_match": null,
+              "positive_hits": "bip | behavior intervention plan",
+              "negative_hits": "",
+              "matched_positive_patterns": "\\bbip\\b | \\bbehavior intervention plan\\b",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "fba_completed_stated",
+              "field_label": "FBA completed stated",
+              "scored_in_prompt": false,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": null,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "speech_services_present",
+              "field_label": "Speech services present",
+              "scored_in_prompt": false,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": null,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "ot_services_present",
+              "field_label": "OT services present",
+              "scored_in_prompt": false,
+              "predicted": true,
+              "ground_truth": true,
+              "is_match": null,
+              "positive_hits": "occupational therapy",
+              "negative_hits": "",
+              "matched_positive_patterns": "\\boccupational therapy\\b",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "visual_schedule_accommodation",
+              "field_label": "Visual schedule accommodation",
+              "scored_in_prompt": false,
+              "predicted": false,
+              "ground_truth": true,
+              "is_match": null,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "break_access_accommodation",
+              "field_label": "Break access accommodation",
+              "scored_in_prompt": false,
+              "predicted": false,
+              "ground_truth": true,
+              "is_match": null,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "reduced_workload_accommodation",
+              "field_label": "Reduced workload accommodation",
+              "scored_in_prompt": false,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": null,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "safety_plan_present",
+              "field_label": "Safety plan present",
+              "scored_in_prompt": false,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": null,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "restraint_or_isolation_flagged",
+              "field_label": "Restraint or isolation flagged",
+              "scored_in_prompt": false,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": null,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "ratio_1to1_explicitly_stated",
+              "field_label": "1:1 ratio explicitly stated",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": true,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            },
+            {
+              "field_name": "ratio_2to1_explicitly_stated",
+              "field_label": "2:1 ratio explicitly stated",
+              "scored_in_prompt": true,
+              "predicted": false,
+              "ground_truth": false,
+              "is_match": true,
+              "positive_hits": "",
+              "negative_hits": "",
+              "matched_positive_patterns": "",
+              "matched_negative_patterns": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
       "run_id": "GEMMA_RUN",
+      "provider": "unknown",
+      "run_path": "study_pipeline/outputs/runs/GEMMA_RUN",
       "summary": {
         "run_id": "GEMMA_RUN",
         "run_dir": "study_pipeline/outputs/runs/GEMMA_RUN",
@@ -172,7 +2358,8 @@
             "correct_scored_fields": 13,
             "scored_field_count": 24
           }
-        ]
+        ],
+        "provider": "unknown"
       },
       "summary_markdown": "# TRACE-ED Run Summary: GEMMA_RUN\n\n- Run folder: `study_pipeline/outputs/runs/GEMMA_RUN`\n- Total evaluations: `30`\n- Overall average accuracy: `74.96%`\n- Abstention detected in `0` response(s)\n\n## Accuracy by Prompt\n\n- `prompt_1` (Broad teacher summary): `62.50%`\n- `prompt_2` (Behavior and supports summary): `67.37%`\n- `prompt_3` (Support level recommendation): `95.00%`\n\n## Accuracy by Model\n\n- `google/gemma-3-4b`: `74.96%`\n\n## Most Missed Fields\n\n- `OT services present`: `19` misses\n- `FBA completed stated`: `16` misses\n- `Break access accommodation`: `15` misses\n- `Verbal disruption present`: `13` misses\n- `Task refusal present`: `12` misses\n- `Visual schedule accommodation`: `11` misses\n- `Reduced workload accommodation`: `10` misses\n- `Behavior frequency data present`: `9` misses\n- `Escape function stated`: `9` misses\n- `Baseline data present`: `8` misses\n\n## Best Runs\n\n- `CASE001` | `google/gemma-3-4b` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE002` | `google/gemma-3-4b` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE003` | `google/gemma-3-4b` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE004` | `google/gemma-3-4b` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE005` | `google/gemma-3-4b` | `prompt_3`: `2/2` (`100.00%`)\n\n## Weakest Runs\n\n- `CASE008` | `google/gemma-3-4b` | `prompt_3`: `1/2` (`50.00%`)\n- `CASE005` | `google/gemma-3-4b` | `prompt_2`: `10/19` (`52.63%`)\n- `CASE009` | `google/gemma-3-4b` | `prompt_2`: `10/19` (`52.63%`)\n- `CASE002` | `google/gemma-3-4b` | `prompt_1`: `13/24` (`54.17%`)\n- `CASE005` | `google/gemma-3-4b` | `prompt_1`: `13/24` (`54.17%`)\n",
       "results": [
@@ -17821,6 +20008,8 @@
     },
     {
       "run_id": "GPTOSS_RUN",
+      "provider": "unknown",
+      "run_path": "study_pipeline/outputs/runs/GPTOSS_RUN",
       "summary": {
         "run_id": "GPTOSS_RUN",
         "run_dir": "study_pipeline/outputs/runs/GPTOSS_RUN",
@@ -17990,7 +20179,8 @@
             "correct_scored_fields": 14,
             "scored_field_count": 24
           }
-        ]
+        ],
+        "provider": "unknown"
       },
       "summary_markdown": "# TRACE-ED Run Summary: GPTOSS_RUN\n\n- Run folder: `study_pipeline/outputs/runs/GPTOSS_RUN`\n- Total evaluations: `30`\n- Overall average accuracy: `78.21%`\n- Abstention detected in `2` response(s)\n\n## Accuracy by Prompt\n\n- `prompt_1` (Broad teacher summary): `70.42%`\n- `prompt_2` (Behavior and supports summary): `74.21%`\n- `prompt_3` (Support level recommendation): `90.00%`\n\n## Accuracy by Model\n\n- `openai/gpt-oss-20b`: `78.21%`\n\n## Most Missed Fields\n\n- `FBA completed stated`: `16` misses\n- `Break access accommodation`: `15` misses\n- `Verbal disruption present`: `13` misses\n- `OT services present`: `12` misses\n- `Reduced workload accommodation`: `10` misses\n- `Task refusal present`: `8` misses\n- `Behavior frequency data present`: `7` misses\n- `Sensory function stated`: `7` misses\n- `Baseline data present`: `5` misses\n- `Visual schedule accommodation`: `5` misses\n\n## Best Runs\n\n- `CASE001` | `openai/gpt-oss-20b` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE002` | `openai/gpt-oss-20b` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE003` | `openai/gpt-oss-20b` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE005` | `openai/gpt-oss-20b` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE007` | `openai/gpt-oss-20b` | `prompt_3`: `2/2` (`100.00%`)\n\n## Weakest Runs\n\n- `CASE004` | `openai/gpt-oss-20b` | `prompt_3`: `1/2` (`50.00%`)\n- `CASE006` | `openai/gpt-oss-20b` | `prompt_3`: `1/2` (`50.00%`)\n- `CASE005` | `openai/gpt-oss-20b` | `prompt_2`: `10/19` (`52.63%`)\n- `CASE005` | `openai/gpt-oss-20b` | `prompt_1`: `13/24` (`54.17%`)\n- `CASE009` | `openai/gpt-oss-20b` | `prompt_1`: `14/24` (`58.33%`)\n",
       "results": [
@@ -38832,6 +41022,8 @@
     },
     {
       "run_id": "LLAMA_RUN",
+      "provider": "unknown",
+      "run_path": "study_pipeline/outputs/runs/LLAMA_RUN",
       "summary": {
         "run_id": "LLAMA_RUN",
         "run_dir": "study_pipeline/outputs/runs/LLAMA_RUN",
@@ -39001,7 +41193,8 @@
             "correct_scored_fields": 11,
             "scored_field_count": 19
           }
-        ]
+        ],
+        "provider": "unknown"
       },
       "summary_markdown": "# TRACE-ED Run Summary: LLAMA_RUN\n\n- Run folder: `study_pipeline/outputs/runs/LLAMA_RUN`\n- Total evaluations: `30`\n- Overall average accuracy: `76.79%`\n- Abstention detected in `0` response(s)\n\n## Accuracy by Prompt\n\n- `prompt_1` (Broad teacher summary): `64.58%`\n- `prompt_2` (Behavior and supports summary): `65.79%`\n- `prompt_3` (Support level recommendation): `100.00%`\n\n## Accuracy by Model\n\n- `llama-3.2-1b-instruct`: `76.79%`\n\n## Most Missed Fields\n\n- `OT services present`: `19` misses\n- `Break access accommodation`: `16` misses\n- `FBA completed stated`: `15` misses\n- `Verbal disruption present`: `13` misses\n- `Visual schedule accommodation`: `13` misses\n- `Escape function stated`: `12` misses\n- `Behavior frequency data present`: `10` misses\n- `Reduced workload accommodation`: `10` misses\n- `Task refusal present`: `8` misses\n- `Baseline data present`: `5` misses\n\n## Best Runs\n\n- `CASE001` | `llama-3.2-1b-instruct` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE002` | `llama-3.2-1b-instruct` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE003` | `llama-3.2-1b-instruct` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE004` | `llama-3.2-1b-instruct` | `prompt_3`: `2/2` (`100.00%`)\n- `CASE005` | `llama-3.2-1b-instruct` | `prompt_3`: `2/2` (`100.00%`)\n\n## Weakest Runs\n\n- `CASE005` | `llama-3.2-1b-instruct` | `prompt_1`: `11/24` (`45.83%`)\n- `CASE005` | `llama-3.2-1b-instruct` | `prompt_2`: `9/19` (`47.37%`)\n- `CASE009` | `llama-3.2-1b-instruct` | `prompt_2`: `10/19` (`52.63%`)\n- `CASE002` | `llama-3.2-1b-instruct` | `prompt_2`: `11/19` (`57.89%`)\n- `CASE004` | `llama-3.2-1b-instruct` | `prompt_2`: `11/19` (`57.89%`)\n",
       "results": [
@@ -58959,6 +61152,8 @@
     },
     {
       "run_id": "NEMOTRON_RUN",
+      "provider": "unknown",
+      "run_path": "study_pipeline/outputs/runs/NEMOTRON_RUN",
       "summary": {
         "run_id": "NEMOTRON_RUN",
         "run_dir": "study_pipeline/outputs/runs/NEMOTRON_RUN",
@@ -59121,7 +61316,8 @@
             "correct_scored_fields": 16,
             "scored_field_count": 19
           }
-        ]
+        ],
+        "provider": "unknown"
       },
       "summary_markdown": "",
       "results": [
