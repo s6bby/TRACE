@@ -7,6 +7,7 @@ from docx import Document
 
 from surca_research_pipeline.src.pipeline.scoring_rules import FIELD_ORDER
 from surca_research_pipeline.src.pipeline.special_ed_pipeline_hardened import (
+    classify_field_result,
     extract_fields_with_evidence,
     get_scored_fields,
     load_prompts,
@@ -15,6 +16,7 @@ from surca_research_pipeline.src.pipeline.special_ed_pipeline_hardened import (
     safe_model_name,
     write_run_report,
 )
+from surca_research_pipeline.src.pipeline.text_cleanup import clean_extracted_text_for_model
 
 ROOT = Path(__file__).resolve().parents[2]
 REAL_BASE_DIR = ROOT / "surca_research_pipeline" / "study_pipeline"
@@ -94,6 +96,49 @@ def test_extract_fields_records_abstention_language():
     assert {item["label"] for item in abstention_hits} >= {"cannot_determine", "not_specified"}
 
 
+def test_text_cleanup_removes_template_side_but_keeps_student_text():
+    raw_text = (
+        "Student will use a break card during transitions. || POINTS TO CONSIDER: template guidance here.\n"
+        "The parent and the school district have agreed that this student requires advanced educational planning "
+        "that may involve the use of isolation, restraint, or a restraint device.\n"
+        "Visual schedule is used daily."
+    )
+
+    result = clean_extracted_text_for_model(raw_text)
+    cleaned = result["cleaned_text"]
+    audit = result["audit"]
+
+    assert "Student will use a break card during transitions" in cleaned
+    assert "Visual schedule is used daily" in cleaned
+    assert "POINTS TO CONSIDER" not in cleaned
+    assert "restraint device" not in cleaned
+    assert audit["removed_count"] >= 2
+
+
+def test_scoring_avoids_common_false_positives():
+    response = (
+        "The student receives sensory breaks and the teacher should pay attention during transitions. "
+        "Restraint and isolation are not documented. A 1:1 ratio is not specified."
+    )
+
+    predicted, _, abstention_hits = extract_fields_with_evidence(response)
+
+    assert predicted["function_sensory_stated"] is False
+    assert predicted["function_attention_stated"] is False
+    assert predicted["restraint_or_isolation_flagged"] is False
+    assert predicted["ratio_1to1_explicitly_stated"] is False
+    assert abstention_hits
+
+
+def test_classify_field_result_labels_error_types():
+    assert classify_field_result(True, True, True, {"negative_hits": []}) == "correct_present"
+    assert classify_field_result(False, False, True, {"negative_hits": []}) == "correct_absent"
+    assert classify_field_result(True, False, True, {"negative_hits": []}) == "unsupported_addition"
+    assert classify_field_result(False, True, True, {"negative_hits": []}) == "omission"
+    assert classify_field_result(False, True, True, {"negative_hits": ["no bip"]}) == "wrong_negative"
+    assert classify_field_result(False, True, False, {"negative_hits": []}) == "unscored"
+
+
 def test_prompt_specific_scoring_coverage():
     assert len(get_scored_fields("prompt_1")) == 24
     assert len(get_scored_fields("prompt_2")) == 19
@@ -123,7 +168,11 @@ def test_run_extract_only_creates_run_folder(tmp_path: Path):
     manifest = json.loads((run_dir / "run_manifest.json").read_text(encoding="utf-8"))
 
     assert run_dir.exists()
-    assert (run_dir / "extracted_case_text" / "CASE001__IEP_extracted.txt").exists()
+    assert (run_dir / "extracted_case_text" / "CASE001__IEP_extracted_raw.txt").exists()
+    assert (run_dir / "cleaned_case_text" / "CASE001__IEP_model_input.txt").exists()
+    assert (run_dir / "extraction_audits" / "CASE001__extraction_audit.json").exists()
+    assert (run_dir / "ground_truth_audits" / "CASE001__ground_truth_audit.json").exists()
+    assert (run_dir / "case_set_audit.md").exists()
     assert (run_dir / "field_rules.json").exists()
     assert manifest["status"] == "completed"
     assert manifest["completed_case_count"] == 1

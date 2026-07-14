@@ -50,6 +50,16 @@ function summarizeClaimTypes(result) {
     .join(' | ')
 }
 
+function summarizeClaimSupport(result) {
+  if (!result?.claim_support_counts || !Object.keys(result.claim_support_counts).length) {
+    return 'No claim support check saved.'
+  }
+
+  return Object.entries(result.claim_support_counts)
+    .map(([status, count]) => `${status}: ${count}`)
+    .join(' | ')
+}
+
 function renderFieldRows(result) {
   if (!result || !result.field_results?.length) {
     return '<tr><td colspan="6">No field data available.</td></tr>'
@@ -67,7 +77,7 @@ function renderFieldRows(result) {
           <td>${row.scored_in_prompt ? 'Scored' : 'Not scored'}</td>
           <td>${formatTruth(row.predicted)}</td>
           <td>${formatTruth(row.ground_truth)}</td>
-          <td>${row.is_match === null || row.is_match === undefined ? 'Unscored' : row.is_match ? 'Match' : 'Miss'}</td>
+          <td>${escapeHtml(row.error_type || (row.is_match === null || row.is_match === undefined ? 'unscored' : row.is_match ? 'match' : 'miss'))}</td>
           <td>${escapeHtml(evidence || '-')}</td>
         </tr>
       `
@@ -82,11 +92,17 @@ function renderClaimRows(result) {
 
   return result.claims
     .map((claim) => {
+      const statusClass =
+        claim.support_status === 'supported'
+          ? 'match'
+          : claim.support_status === 'unsupported'
+            ? 'miss'
+            : 'unscored'
       return `
-        <tr>
+        <tr class="${statusClass}">
           <td>${escapeHtml(claim.claim_id)}</td>
           <td>${escapeHtml(claim.claim_type)}</td>
-          <td>${claim.source_unit_index}</td>
+          <td>${escapeHtml(claim.support_status || 'not_checked')}</td>
           <td>${escapeHtml(claim.source_text)}</td>
         </tr>
       `
@@ -240,6 +256,7 @@ function render() {
                 <div><span class="field-name">Claims Kept</span><span>${currentResult.claim_count ?? 0}</span></div>
               </div>
               <p class="muted compact-note">${escapeHtml(summarizeResult(currentResult))}</p>
+              <p class="muted compact-note">${escapeHtml(summarizeClaimSupport(currentResult))}</p>
             `
             : '<p class="muted">No result available in this run.</p>'
         }
@@ -264,7 +281,7 @@ function render() {
               <tr>
                 <th>Claim ID</th>
                 <th>Type</th>
-                <th>Unit</th>
+                <th>Support</th>
                 <th>Claim Text</th>
               </tr>
             </thead>
@@ -304,7 +321,7 @@ function render() {
                 <th>Status</th>
                 <th>Predicted</th>
                 <th>Ground truth</th>
-                <th>Match</th>
+                <th>Result type</th>
                 <th>Evidence</th>
               </tr>
             </thead>

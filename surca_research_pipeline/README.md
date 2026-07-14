@@ -83,6 +83,17 @@ LM Studio runs: surca_research_pipeline\study_pipeline\outputs\runs
 Bedrock runs:   surca_research_pipeline\study_pipeline\outputs\bedrock_runs
 ```
 
+Inside a run folder, check:
+
+```text
+cleaned_case_text      text sent to the model
+extracted_case_text    raw extracted text
+extraction_audits      what cleanup removed
+ground_truth_audits    field-by-field audit helper
+claims                 claim extraction and support check
+review_checklist.md    what to inspect before trusting the run
+```
+
 Run again with the same run id:
 
 ```bat

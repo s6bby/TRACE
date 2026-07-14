@@ -52,6 +52,11 @@ try:
 except ImportError:
     from ..claims.claim_extractor import build_claim_breakdown
 
+try:
+    from surca_research_pipeline.src.pipeline.text_cleanup import clean_extracted_text_for_model
+except ImportError:
+    from .text_cleanup import clean_extracted_text_for_model
+
 TEMPERATURE = 0.0
 MAX_RESPONSE_TOKENS = 700
 DEFAULT_TIMEOUT = 900
@@ -59,6 +64,9 @@ DEFAULT_PROMPTS_DIRNAME = "master_prompts"
 REPORT_MARKDOWN_NAME = "result_summary.md"
 REPORT_JSON_NAME = "summary_metrics.json"
 RULE_CATALOG_NAME = "field_rules.json"
+CASE_SET_AUDIT_MD_NAME = "case_set_audit.md"
+CASE_SET_AUDIT_JSON_NAME = "case_set_audit.json"
+REVIEW_CHECKLIST_NAME = "review_checklist.md"
 DEMO_EXPORT_NAME = "trace-ed-data.json"
 TABLE_CELL_SEPARATOR = " | "
 TABLE_ROW_SEPARATOR = " || "
@@ -82,6 +90,19 @@ COMMON_MOJIBAKE_REPLACEMENTS = {
     "Â ": " ",
     "Â": "",
 }
+
+COMMON_MOJIBAKE_REPLACEMENTS.update(
+    {
+        "â€™": "'",
+        "â€˜": "'",
+        "â€œ": '"',
+        "â€": '"',
+        "â€“": "-",
+        "â€”": "-",
+        "â€¢": "- ",
+        "â‰¤": "<=",
+    }
+)
 
 DOCX_NOISE_PATTERNS = [
     r"^authorization for release of records by office of superintendent of public instruction",
@@ -343,6 +364,8 @@ def validate_case_folder(case_dir: Path) -> List[str]:
             iep_text = extract_docx_text(iep_files[0])
             if not iep_text:
                 issues.append(f"{case_dir.name}: IEP text extracted as empty")
+            elif not clean_extracted_text_for_model(iep_text)["cleaned_text"]:
+                issues.append(f"{case_dir.name}: IEP cleaned text is empty")
         except Exception as exc:
             issues.append(f"{case_dir.name}: could not read IEP docx ({exc})")
 
@@ -351,6 +374,8 @@ def validate_case_folder(case_dir: Path) -> List[str]:
             bip_text = extract_docx_text(bip_files[0])
             if not bip_text:
                 issues.append(f"{case_dir.name}: BIP text extracted as empty")
+            elif not clean_extracted_text_for_model(bip_text)["cleaned_text"]:
+                issues.append(f"{case_dir.name}: BIP cleaned text is empty")
         except Exception as exc:
             issues.append(f"{case_dir.name}: could not read BIP docx ({exc})")
 
@@ -426,8 +451,10 @@ def load_case(case_dir: Path) -> Dict[str, Any]:
     bip_path = find_single_matching_file(case_dir, "*BIP.docx", "BIP")
     gt_path = find_single_json(case_dir)
 
-    iep_text = extract_docx_text(iep_path)
-    bip_text = extract_docx_text(bip_path)
+    iep_raw_text = extract_docx_text(iep_path)
+    bip_raw_text = extract_docx_text(bip_path)
+    iep_cleaned = clean_extracted_text_for_model(iep_raw_text)
+    bip_cleaned = clean_extracted_text_for_model(bip_raw_text)
     ground_truth_raw = json.loads(gt_path.read_text(encoding="utf-8"))
     ground_truth = flatten_ground_truth(ground_truth_raw)
 
@@ -436,8 +463,12 @@ def load_case(case_dir: Path) -> Dict[str, Any]:
         "iep_path": iep_path,
         "bip_path": bip_path,
         "gt_path": gt_path,
-        "iep_text": iep_text,
-        "bip_text": bip_text,
+        "iep_raw_text": iep_raw_text,
+        "bip_raw_text": bip_raw_text,
+        "iep_text": str(iep_cleaned["cleaned_text"]),
+        "bip_text": str(bip_cleaned["cleaned_text"]),
+        "iep_extraction_audit": iep_cleaned["audit"],
+        "bip_extraction_audit": bip_cleaned["audit"],
         "ground_truth": ground_truth,
         "ground_truth_raw": ground_truth_raw,
     }
@@ -614,7 +645,7 @@ def call_openai_compatible(
     temperature: float,
     max_tokens: int,
     timeout: int = DEFAULT_TIMEOUT,
-) -> str:
+) -> Dict[str, Any]:
     base = normalize_openai_base(base_url)
     url = base + "/chat/completions"
 
@@ -667,8 +698,15 @@ def call_openai_compatible(
             for item in content:
                 if isinstance(item, dict) and item.get("type") == "text":
                     parts.append(item.get("text", ""))
-            return "\n".join(parts).strip()
-        return str(content).strip()
+            text = "\n".join(parts).strip()
+        else:
+            text = str(content).strip()
+        return {
+            "text": text,
+            "usage": data.get("usage", {}),
+            "metrics": {},
+            "raw_backend_response_keys": sorted(data.keys()),
+        }
     except Exception as exc:
         raise RuntimeError("Unexpected response format from backend.\n" f"Body:\n{json.dumps(data, indent=2)}") from exc
 
@@ -680,7 +718,7 @@ def call_bedrock_converse(
     aws_profile: Optional[str],
     temperature: float,
     max_tokens: int,
-) -> str:
+) -> Dict[str, Any]:
     client = make_bedrock_client("bedrock-runtime", aws_region, aws_profile)
     payload = {
         "modelId": model_name,
@@ -716,7 +754,12 @@ def call_bedrock_converse(
     try:
         content = response["output"]["message"]["content"]
         text_parts = [item.get("text", "") for item in content if isinstance(item, dict) and item.get("text")]
-        return "\n".join(text_parts).strip()
+        return {
+            "text": "\n".join(text_parts).strip(),
+            "usage": response.get("usage", {}),
+            "metrics": response.get("metrics", {}),
+            "raw_backend_response_keys": sorted(response.keys()),
+        }
     except Exception as exc:
         raise RuntimeError("Unexpected response format from Bedrock.\n" f"Body:\n{json.dumps(response, indent=2)}") from exc
 
@@ -731,7 +774,7 @@ def call_model_backend(
     aws_profile: Optional[str],
     temperature: float,
     max_tokens: int,
-) -> str:
+) -> Dict[str, Any]:
     normalized_provider = normalize_provider(provider)
     if normalized_provider == "bedrock":
         return call_bedrock_converse(
@@ -750,6 +793,17 @@ def call_model_backend(
         temperature=temperature,
         max_tokens=max_tokens,
     )
+
+
+def usage_value(usage: Dict[str, Any], *names: str) -> Any:
+    for name in names:
+        if name in usage:
+            return usage[name]
+    return ""
+
+
+def latency_value(metrics: Dict[str, Any]) -> Any:
+    return usage_value(metrics, "latencyMs", "latency_ms", "latency")
 
 
 def collect_pattern_hits(text: str, patterns: List[str]) -> Tuple[List[str], List[str]]:
@@ -837,6 +891,152 @@ def compare_to_ground_truth(
     return correct, scored_field_count, accuracy, matches
 
 
+def classify_field_result(
+    predicted: bool,
+    ground_truth: bool,
+    scored: bool,
+    evidence: Dict[str, List[str]],
+) -> str:
+    if not scored:
+        return "unscored"
+    if predicted and ground_truth:
+        return "correct_present"
+    if not predicted and not ground_truth:
+        return "correct_absent"
+    if predicted and not ground_truth:
+        return "unsupported_addition"
+    if evidence.get("negative_hits"):
+        return "wrong_negative"
+    return "omission"
+
+
+def source_evidence_for_field(source_text: str, field: str) -> Dict[str, List[str]]:
+    rule = RULES[field]
+    text = normalize_for_matching(source_text)
+    return evidence_for_field(text, rule["positive"], rule["negative"])
+
+
+def build_ground_truth_audit(case: Dict[str, Any]) -> Dict[str, Any]:
+    cleaned_source = f"{case['iep_text']}\n{case['bip_text']}"
+    raw_source = f"{case['iep_raw_text']}\n{case['bip_raw_text']}"
+    fields = []
+
+    for field in FIELD_ORDER:
+        truth = bool(case["ground_truth"][field])
+        clean_evidence = source_evidence_for_field(cleaned_source, field)
+        raw_evidence = source_evidence_for_field(raw_source, field)
+        clean_has_hit = bool(clean_evidence["positive_hits"])
+        raw_has_hit = bool(raw_evidence["positive_hits"])
+
+        if truth and clean_has_hit:
+            review_status = "source_hit_found"
+        elif truth:
+            review_status = "needs_manual_note_true_field"
+        elif raw_has_hit and not clean_has_hit:
+            review_status = "template_hit_removed"
+        elif raw_has_hit:
+            review_status = "needs_manual_review_false_field"
+        else:
+            review_status = "not_found_in_source"
+
+        fields.append(
+            {
+                "field_name": field,
+                "field_label": FIELD_LABELS.get(field, field),
+                "ground_truth": truth,
+                "review_status": review_status,
+                "cleaned_positive_hits": clean_evidence["positive_hits"],
+                "cleaned_negative_hits": clean_evidence["negative_hits"],
+                "raw_positive_hits": raw_evidence["positive_hits"],
+                "raw_negative_hits": raw_evidence["negative_hits"],
+            }
+        )
+
+    return {
+        "case_id": case["case_id"],
+        "note": "This is an audit helper, not a replacement for manual review.",
+        "raw_text_hash": sha256_text(raw_source),
+        "cleaned_text_hash": sha256_text(cleaned_source),
+        "fields": fields,
+    }
+
+
+def save_ground_truth_audit(paths: Dict[str, Path], case: Dict[str, Any]) -> None:
+    payload = build_ground_truth_audit(case)
+    out_path = paths["ground_truth_audits"] / f"{case['case_id']}__ground_truth_audit.json"
+    out_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+
+def summarize_case_set(cases: List[Dict[str, Any]]) -> Dict[str, Any]:
+    field_counts = {}
+    for field in FIELD_ORDER:
+        true_cases = [case["case_id"] for case in cases if bool(case["ground_truth"][field])]
+        false_cases = [case["case_id"] for case in cases if not bool(case["ground_truth"][field])]
+        field_counts[field] = {
+            "field_label": FIELD_LABELS.get(field, field),
+            "true_count": len(true_cases),
+            "false_count": len(false_cases),
+            "true_cases": true_cases,
+            "false_cases": false_cases,
+        }
+
+    return {
+        "case_count": len(cases),
+        "case_ids": [case["case_id"] for case in cases],
+        "never_true_fields": [
+            field for field, info in field_counts.items() if int(info["true_count"]) == 0
+        ],
+        "always_true_fields": [
+            field for field, info in field_counts.items() if int(info["false_count"]) == 0
+        ],
+        "field_counts": field_counts,
+    }
+
+
+def render_case_set_audit(summary: Dict[str, Any]) -> str:
+    lines = [
+        "# Case Set Audit",
+        "",
+        "This is a quick check of what the current case set can actually test.",
+        "",
+        f"- Cases checked: `{summary['case_count']}`",
+        f"- Case IDs: `{', '.join(summary['case_ids'])}`",
+        "",
+        "## Fields That Are Never True",
+        "",
+    ]
+
+    if summary["never_true_fields"]:
+        for field in summary["never_true_fields"]:
+            label = FIELD_LABELS.get(field, field)
+            lines.append(f"- `{label}`")
+    else:
+        lines.append("- None.")
+
+    lines.extend(["", "## Field Counts", ""])
+    for field, info in summary["field_counts"].items():
+        lines.append(
+            f"- `{info['field_label']}`: `{info['true_count']}` true / `{info['false_count']}` false"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## Note",
+            "",
+            "Never-true fields can still be useful as hallucination checks, but they do not measure how well a model finds that field when it is actually present.",
+        ]
+    )
+    return "\n".join(lines).strip() + "\n"
+
+
+def save_case_set_audit(paths: Dict[str, Path], cases: List[Dict[str, Any]]) -> Dict[str, Any]:
+    summary = summarize_case_set(cases)
+    paths["case_set_audit_json"].write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    paths["case_set_audit_md"].write_text(render_case_set_audit(summary), encoding="utf-8")
+    return summary
+
+
 def prepare_run_paths(
     base_dir: Path,
     run_id: str,
@@ -863,12 +1063,18 @@ def prepare_run_paths(
         "pred": run_dir / "predicted_json",
         "claims": run_dir / "claims",
         "docx": run_dir / "extracted_case_text",
+        "cleaned_text": run_dir / "cleaned_case_text",
+        "extraction_audits": run_dir / "extraction_audits",
+        "ground_truth_audits": run_dir / "ground_truth_audits",
         "summary_csv": run_dir / "results.csv",
         "field_csv": run_dir / "field_results.csv",
         "manifest": run_dir / "run_manifest.json",
         "report_md": run_dir / REPORT_MARKDOWN_NAME,
         "report_json": run_dir / REPORT_JSON_NAME,
         "rule_catalog": run_dir / RULE_CATALOG_NAME,
+        "case_set_audit_md": run_dir / CASE_SET_AUDIT_MD_NAME,
+        "case_set_audit_json": run_dir / CASE_SET_AUDIT_JSON_NAME,
+        "review_checklist": run_dir / REVIEW_CHECKLIST_NAME,
     }
 
     for path in paths.values():
@@ -893,6 +1099,10 @@ def init_csvs(summary_csv: Path, field_csv: Path) -> None:
                     "accuracy_percent",
                     "abstention_detected",
                     "abstention_hits",
+                    "input_tokens",
+                    "output_tokens",
+                    "total_tokens",
+                    "latency_ms",
                     "raw_response_sha256",
                     "predicted_json_sha256",
                 ]
@@ -913,6 +1123,7 @@ def init_csvs(summary_csv: Path, field_csv: Path) -> None:
                     "predicted",
                     "ground_truth",
                     "is_match",
+                    "error_type",
                     "positive_hits",
                     "negative_hits",
                     "matched_positive_patterns",
@@ -937,6 +1148,14 @@ def save_rule_catalog(paths: Dict[str, Path]) -> None:
         "prompt_field_coverage": PROMPT_FIELD_COVERAGE,
         "prompt_scoring_notes": PROMPT_SCORING_NOTES,
         "abstention_patterns": ABSTENTION_PATTERNS,
+        "field_result_types": [
+            "correct_present",
+            "correct_absent",
+            "omission",
+            "unsupported_addition",
+            "wrong_negative",
+            "unscored",
+        ],
     }
     paths["rule_catalog"].write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
@@ -956,6 +1175,22 @@ def collect_manifest(
 ) -> Dict[str, Any]:
     prompt_dir = base_dir / DEFAULT_PROMPTS_DIRNAME
     normalized_provider = normalize_provider(provider)
+    scoring_rules_path = Path(__file__).resolve().with_name("scoring_rules.py")
+    claim_extractor_path = Path(__file__).resolve().parents[1] / "claims" / "claim_extractor.py"
+    text_cleanup_path = Path(__file__).resolve().with_name("text_cleanup.py")
+    prompt_hashes = {}
+    for prompt_id, filename in PROMPT_FILE_MAP.items():
+        prompt_path = prompt_dir / filename
+        if prompt_path.exists():
+            prompt_hashes[prompt_id] = sha256_file(prompt_path)
+
+    case_file_hashes = {}
+    for case_dir in case_dirs:
+        case_file_hashes[case_dir.name] = {
+            path.name: sha256_file(path)
+            for path in sorted(case_dir.iterdir())
+            if path.is_file()
+        }
 
     return {
         "run_id": run_id,
@@ -966,9 +1201,13 @@ def collect_manifest(
         "run_dir": str(paths["run_dir"].resolve()),
         "script_path": str(Path(__file__).resolve()),
         "script_sha256": sha256_file(Path(__file__).resolve()),
+        "scoring_rules_sha256": sha256_file(scoring_rules_path) if scoring_rules_path.exists() else "",
+        "claim_extractor_sha256": sha256_file(claim_extractor_path) if claim_extractor_path.exists() else "",
+        "text_cleanup_sha256": sha256_file(text_cleanup_path) if text_cleanup_path.exists() else "",
         "rules_path": str(paths["rule_catalog"].resolve()),
         "case_ids": [path.name for path in case_dirs],
         "case_count": len(case_dirs),
+        "case_file_hashes": case_file_hashes,
         "provider": normalized_provider,
         "models": models,
         "base_url": normalize_openai_base(base_url) if normalized_provider == "lmstudio" and base_url else "",
@@ -976,6 +1215,7 @@ def collect_manifest(
         "aws_profile": aws_profile or "",
         "prompt_dir": str(prompt_dir.resolve()),
         "prompt_files": PROMPT_FILE_MAP,
+        "prompt_hashes": prompt_hashes,
         "prompts": prompts or {},
         "prompt_labels": PROMPT_LABELS,
         "prompt_field_coverage": PROMPT_FIELD_COVERAGE,
@@ -990,8 +1230,10 @@ def collect_manifest(
             "Ground truth is never sent to the tested model.",
             "Prompt text is loaded from the master prompt files.",
             "Scoring is deterministic and regex-based.",
+            "The model receives cleaned text; raw extracted text is still saved for audit.",
             "Claim extraction splits the response into sentence or bullet-sized units.",
             "Claim filtering keeps only units that look checkable against the source documents.",
+            "Claim support status is based on deterministic document text matching, not another LLM.",
             "Prompt-specific scoring follows the testing protocol.",
             "Abstention-style language is recorded at the response level.",
             "Each response is stored before scoring.",
@@ -1000,8 +1242,21 @@ def collect_manifest(
 
 
 def save_case_text(paths: Dict[str, Path], case: Dict[str, Any]) -> None:
-    (paths["docx"] / f"{case['case_id']}__IEP_extracted.txt").write_text(case["iep_text"], encoding="utf-8")
-    (paths["docx"] / f"{case['case_id']}__BIP_extracted.txt").write_text(case["bip_text"], encoding="utf-8")
+    case_id = case["case_id"]
+    (paths["docx"] / f"{case_id}__IEP_extracted_raw.txt").write_text(case["iep_raw_text"], encoding="utf-8")
+    (paths["docx"] / f"{case_id}__BIP_extracted_raw.txt").write_text(case["bip_raw_text"], encoding="utf-8")
+    (paths["cleaned_text"] / f"{case_id}__IEP_model_input.txt").write_text(case["iep_text"], encoding="utf-8")
+    (paths["cleaned_text"] / f"{case_id}__BIP_model_input.txt").write_text(case["bip_text"], encoding="utf-8")
+    audit_payload = {
+        "case_id": case_id,
+        "iep": case["iep_extraction_audit"],
+        "bip": case["bip_extraction_audit"],
+    }
+    (paths["extraction_audits"] / f"{case_id}__extraction_audit.json").write_text(
+        json.dumps(audit_payload, indent=2),
+        encoding="utf-8",
+    )
+    save_ground_truth_audit(paths, case)
 
 
 def read_latest_run_id(base_dir: Path, run_group: str = DEFAULT_RUN_GROUP) -> str:
@@ -1060,10 +1315,15 @@ def build_run_metrics(run_dir: Path) -> Dict[str, Any]:
             "overall_average_accuracy": 0.0,
             "accuracy_by_prompt": {},
             "accuracy_by_model": {},
+            "error_type_counts": {},
+            "claim_support_counts": {},
             "most_missed_fields": [],
+            "likely_false_positive_fields": [],
+            "likely_omission_fields": [],
             "top_runs": [],
             "bottom_runs": [],
             "abstention_detected_count": 0,
+            "token_usage": {},
         }
 
     def average(values: List[float]) -> float:
@@ -1078,14 +1338,48 @@ def build_run_metrics(run_dir: Path) -> Dict[str, Any]:
         by_model.setdefault(row["model_name"], []).append(float(row["accuracy_percent"]))
 
     missed_fields: Dict[str, int] = {}
+    error_type_counts: Dict[str, int] = {}
+    likely_false_positive_fields: Dict[str, int] = {}
+    likely_omission_fields: Dict[str, int] = {}
     for row in field_rows:
         if not parse_bool(row.get("scored_in_prompt", "")):
             continue
+        error_type = row.get("error_type", "")
+        if error_type:
+            error_type_counts[error_type] = error_type_counts.get(error_type, 0) + 1
+            if error_type == "unsupported_addition":
+                field_name = row["field_name"]
+                likely_false_positive_fields[field_name] = likely_false_positive_fields.get(field_name, 0) + 1
+            if error_type in {"omission", "wrong_negative"}:
+                field_name = row["field_name"]
+                likely_omission_fields[field_name] = likely_omission_fields.get(field_name, 0) + 1
         if parse_optional_bool(row.get("is_match", "")) is False:
             field_name = row["field_name"]
             missed_fields[field_name] = missed_fields.get(field_name, 0) + 1
 
     ranked_rows = sorted(summary_rows, key=lambda row: float(row["accuracy_percent"]), reverse=True)
+
+    def int_or_zero(value: Any) -> int:
+        try:
+            if str(value).strip() == "":
+                return 0
+            return int(float(value))
+        except Exception:
+            return 0
+
+    token_usage = {
+        "input_tokens": sum(int_or_zero(row.get("input_tokens", "")) for row in summary_rows),
+        "output_tokens": sum(int_or_zero(row.get("output_tokens", "")) for row in summary_rows),
+        "total_tokens": sum(int_or_zero(row.get("total_tokens", "")) for row in summary_rows),
+    }
+
+    claim_support_counts: Dict[str, int] = {}
+    claims_dir = run_dir / "claims"
+    if claims_dir.exists():
+        for claim_file in claims_dir.glob("*.json"):
+            payload = load_json_file(claim_file)
+            for status, count in payload.get("claim_support_counts", {}).items():
+                claim_support_counts[status] = claim_support_counts.get(status, 0) + int(count)
 
     metrics = {
         "run_id": run_dir.name,
@@ -1098,6 +1392,9 @@ def build_run_metrics(run_dir: Path) -> Dict[str, Any]:
         "accuracy_by_prompt": {prompt_id: average(values) for prompt_id, values in by_prompt.items()},
         "accuracy_by_model": {model_name: average(values) for model_name, values in by_model.items()},
         "abstention_detected_count": sum(parse_bool(row.get("abstention_detected", "")) for row in summary_rows),
+        "token_usage": token_usage,
+        "error_type_counts": dict(sorted(error_type_counts.items())),
+        "claim_support_counts": dict(sorted(claim_support_counts.items())),
         "most_missed_fields": [
             {
                 "field_name": field_name,
@@ -1105,6 +1402,26 @@ def build_run_metrics(run_dir: Path) -> Dict[str, Any]:
                 "miss_count": miss_count,
             }
             for field_name, miss_count in sorted(missed_fields.items(), key=lambda item: (-item[1], item[0]))[:10]
+        ],
+        "likely_false_positive_fields": [
+            {
+                "field_name": field_name,
+                "field_label": FIELD_LABELS.get(field_name, field_name),
+                "count": count,
+            }
+            for field_name, count in sorted(
+                likely_false_positive_fields.items(), key=lambda item: (-item[1], item[0])
+            )[:10]
+        ],
+        "likely_omission_fields": [
+            {
+                "field_name": field_name,
+                "field_label": FIELD_LABELS.get(field_name, field_name),
+                "count": count,
+            }
+            for field_name, count in sorted(
+                likely_omission_fields.items(), key=lambda item: (-item[1], item[0])
+            )[:10]
         ],
         "top_runs": [
             {
@@ -1141,6 +1458,7 @@ def render_run_report_markdown(metrics: Dict[str, Any]) -> str:
         f"- Total evaluations: `{metrics['total_evaluations']}`",
         f"- Overall average accuracy: `{metrics['overall_average_accuracy']:.2f}%`",
         f"- Abstention detected in `{metrics['abstention_detected_count']}` response(s)",
+        f"- Total tokens recorded: `{metrics.get('token_usage', {}).get('total_tokens', 0)}`",
         "",
         "## Accuracy by Prompt",
         "",
@@ -1155,6 +1473,22 @@ def render_run_report_markdown(metrics: Dict[str, Any]) -> str:
     for model_name, accuracy in metrics.get("accuracy_by_model", {}).items():
         lines.append(f"- `{model_name}`: `{accuracy:.2f}%`")
 
+    lines.extend(["", "## Error Types", ""])
+
+    if metrics.get("error_type_counts"):
+        for error_type, count in metrics["error_type_counts"].items():
+            lines.append(f"- `{error_type}`: `{count}`")
+    else:
+        lines.append("- No error-type data available.")
+
+    lines.extend(["", "## Claim Support Check", ""])
+
+    if metrics.get("claim_support_counts"):
+        for status, count in metrics["claim_support_counts"].items():
+            lines.append(f"- `{status}`: `{count}`")
+    else:
+        lines.append("- No claim support data available.")
+
     lines.extend(["", "## Most Missed Fields", ""])
 
     if metrics.get("most_missed_fields"):
@@ -1162,6 +1496,22 @@ def render_run_report_markdown(metrics: Dict[str, Any]) -> str:
             lines.append(f"- `{item['field_label']}`: `{item['miss_count']}` misses")
     else:
         lines.append("- No missed-field data available.")
+
+    lines.extend(["", "## Likely False Positives", ""])
+
+    if metrics.get("likely_false_positive_fields"):
+        for item in metrics["likely_false_positive_fields"]:
+            lines.append(f"- `{item['field_label']}`: `{item['count']}`")
+    else:
+        lines.append("- No likely false positives found.")
+
+    lines.extend(["", "## Likely Omissions", ""])
+
+    if metrics.get("likely_omission_fields"):
+        for item in metrics["likely_omission_fields"]:
+            lines.append(f"- `{item['field_label']}`: `{item['count']}`")
+    else:
+        lines.append("- No likely omissions found.")
 
     lines.extend(["", "## Best Runs", ""])
 
@@ -1184,10 +1534,62 @@ def render_run_report_markdown(metrics: Dict[str, Any]) -> str:
     return "\n".join(lines).strip() + "\n"
 
 
+def render_review_checklist(metrics: Dict[str, Any]) -> str:
+    lines = [
+        f"# Review Checklist: {metrics['run_id']}",
+        "",
+        "Use this before treating the run as real results.",
+        "",
+        "## First Checks",
+        "",
+        "- [ ] Open `result_summary.md` and check the overall pattern.",
+        "- [ ] Open `case_set_audit.md` and confirm the case set can test the fields being discussed.",
+        "- [ ] Open `extraction_audits/` and make sure the cleaned text did not remove student-specific facts.",
+        "- [ ] Open `ground_truth_audits/` and look for fields marked `needs_manual_review_false_field` or `needs_manual_note_true_field`.",
+        "- [ ] Check at least one raw response, predicted JSON file, and claim file before reporting numbers.",
+        "",
+        "## Fields To Inspect First",
+        "",
+    ]
+
+    flagged = metrics.get("likely_false_positive_fields", []) + metrics.get("likely_omission_fields", [])
+    if flagged:
+        seen = set()
+        for item in flagged:
+            label = item["field_label"]
+            if label in seen:
+                continue
+            seen.add(label)
+            lines.append(f"- [ ] `{label}`")
+    else:
+        lines.append("- [ ] No obvious flagged fields from the summary.")
+
+    lines.extend(["", "## Claim Check", ""])
+    claim_counts = metrics.get("claim_support_counts", {})
+    if claim_counts:
+        for status, count in claim_counts.items():
+            lines.append(f"- `{status}` claims: `{count}`")
+    else:
+        lines.append("- No claim support counts were saved.")
+
+    lines.extend(
+        [
+            "",
+            "## Notes While Reviewing",
+            "",
+            "- If a model is wrong because the scoring rule missed normal wording, fix the scoring rule before a full run.",
+            "- If a model is wrong because the source text still has template noise, fix extraction before a full run.",
+            "- If the model is just wrong, leave the pipeline alone and record the mistake.",
+        ]
+    )
+    return "\n".join(lines).strip() + "\n"
+
+
 def write_run_report(run_dir: Path) -> Dict[str, Any]:
     metrics = build_run_metrics(run_dir)
     (run_dir / REPORT_JSON_NAME).write_text(json.dumps(metrics, indent=2), encoding="utf-8")
     (run_dir / REPORT_MARKDOWN_NAME).write_text(render_run_report_markdown(metrics), encoding="utf-8")
+    (run_dir / REVIEW_CHECKLIST_NAME).write_text(render_review_checklist(metrics), encoding="utf-8")
     return metrics
 
 
@@ -1267,6 +1669,7 @@ def build_demo_run_payload(run_dir: Path) -> Dict[str, Any]:
                 "predicted": parse_bool(row.get("predicted", "")),
                 "ground_truth": parse_bool(row.get("ground_truth", "")),
                 "is_match": parse_optional_bool(row.get("is_match", "")),
+                "error_type": row.get("error_type", ""),
                 "positive_hits": row.get("positive_hits", ""),
                 "negative_hits": row.get("negative_hits", ""),
                 "matched_positive_patterns": row.get("matched_positive_patterns", ""),
@@ -1304,6 +1707,7 @@ def build_demo_run_payload(run_dir: Path) -> Dict[str, Any]:
                 "claim_count": int(claim_payload.get("claim_count", 0)),
                 "source_unit_count": int(claim_payload.get("source_unit_count", 0)),
                 "claims_by_type": claim_payload.get("claims_by_type", {}),
+                "claim_support_counts": claim_payload.get("claim_support_counts", {}),
                 "claim_units": claim_payload.get("units", []),
                 "claims": claim_payload.get("claims", []),
                 "field_results": field_lookup.get(key, []),
@@ -1354,6 +1758,7 @@ def run_extract_only(
 ) -> None:
     preflight = run_preflight_validation(base_dir, selected_cases, validate_prompts=False)
     case_dirs = preflight["case_dirs"]
+    cases = [load_case(case_dir) for case_dir in case_dirs]
     paths = prepare_run_paths(base_dir, run_id, overwrite_run)
     manifest = collect_manifest(
         run_id,
@@ -1373,6 +1778,8 @@ def run_extract_only(
     manifest["expected_case_count"] = len(case_dirs)
     manifest["completed_case_count"] = 0
     save_rule_catalog(paths)
+    case_set_audit = save_case_set_audit(paths, cases)
+    manifest["case_set_audit"] = case_set_audit
     write_manifest(paths["manifest"], manifest)
     mark_latest_run(paths, run_id)
 
@@ -1381,8 +1788,7 @@ def run_extract_only(
     print(f"run folder: {paths['run_dir']}")
 
     try:
-        for case_dir in case_dirs:
-            case = load_case(case_dir)
+        for case in cases:
             save_case_text(paths, case)
             manifest["completed_case_count"] += 1
             print(f"saved extracted text for {case['case_id']}")
@@ -1418,9 +1824,11 @@ def run_pipeline(
 
     preflight = run_preflight_validation(base_dir, selected_cases, validate_prompts=True)
     case_dirs = preflight["case_dirs"]
+    cases = [load_case(case_dir) for case_dir in case_dirs]
     paths = prepare_run_paths(base_dir, run_id, overwrite_run, run_group_for_provider(normalized_provider))
     init_csvs(paths["summary_csv"], paths["field_csv"])
     save_rule_catalog(paths)
+    case_set_audit = save_case_set_audit(paths, cases)
 
     manifest = collect_manifest(
         run_id,
@@ -1439,6 +1847,7 @@ def run_pipeline(
     manifest["validated_case_count"] = preflight["case_count"]
     manifest["expected_run_count"] = len(case_dirs) * len(models) * len(prompts)
     manifest["completed_run_count"] = 0
+    manifest["case_set_audit"] = case_set_audit
     write_manifest(paths["manifest"], manifest)
     mark_latest_run(paths, run_id)
 
@@ -1447,8 +1856,7 @@ def run_pipeline(
     print(f"run folder: {paths['run_dir']}")
 
     try:
-        for case_dir in case_dirs:
-            case = load_case(case_dir)
+        for case in cases:
             save_case_text(paths, case)
 
             for model_name in models:
@@ -1471,7 +1879,7 @@ def run_pipeline(
                             f"({len(model_input)} chars). Check extracted text before sending to the model backend."
                         )
 
-                    raw_response = call_model_backend(
+                    model_result = call_model_backend(
                         provider=normalized_provider,
                         base_url=base_url,
                         model_name=model_name,
@@ -1482,6 +1890,9 @@ def run_pipeline(
                         temperature=TEMPERATURE,
                         max_tokens=MAX_RESPONSE_TOKENS,
                     )
+                    raw_response = str(model_result.get("text", "")).strip()
+                    usage = model_result.get("usage", {}) if isinstance(model_result.get("usage", {}), dict) else {}
+                    metrics = model_result.get("metrics", {}) if isinstance(model_result.get("metrics", {}), dict) else {}
 
                     predicted, evidence, abstention_hits = extract_fields_with_evidence(raw_response)
                     correct_scored_fields, scored_field_count, accuracy, matches = compare_to_ground_truth(
@@ -1494,7 +1905,12 @@ def run_pipeline(
                     raw_path = paths["raw"] / f"{file_stem}.json"
                     pred_path = paths["pred"] / f"{file_stem}.json"
                     claim_path = paths["claims"] / f"{file_stem}.json"
-                    claim_breakdown = build_claim_breakdown(raw_response, prefix=file_stem)
+                    source_text_for_claims = f"{case['iep_text']}\n{case['bip_text']}"
+                    claim_breakdown = build_claim_breakdown(
+                        raw_response,
+                        prefix=file_stem,
+                        document_text=source_text_for_claims,
+                    )
 
                     raw_payload = {
                         "run_id": run_id,
@@ -1505,6 +1921,10 @@ def run_pipeline(
                         "prompt_label": prompt_label,
                         "prompt_text": prompt_text,
                         "model_input_sha256": sha256_text(model_input),
+                        "model_input_char_count": len(model_input),
+                        "model_usage": usage,
+                        "model_metrics": metrics,
+                        "backend_response_keys": model_result.get("raw_backend_response_keys", []),
                         "raw_response": raw_response,
                     }
                     raw_path.write_text(json.dumps(raw_payload, indent=2), encoding="utf-8")
@@ -1538,6 +1958,7 @@ def run_pipeline(
                         "matches": matches,
                         "claim_count": claim_breakdown["claim_count"],
                         "claims_by_type": claim_breakdown["claims_by_type"],
+                        "claim_support_counts": claim_breakdown.get("claim_support_counts", {}),
                         "accuracy_percent": round(accuracy, 2),
                     }
                     pred_path.write_text(json.dumps(pred_payload, indent=2), encoding="utf-8")
@@ -1555,6 +1976,10 @@ def run_pipeline(
                                 round(accuracy, 2),
                                 bool(abstention_hits),
                                 format_abstention_hits(abstention_hits),
+                                usage_value(usage, "inputTokens", "prompt_tokens", "input_tokens"),
+                                usage_value(usage, "outputTokens", "completion_tokens", "output_tokens"),
+                                usage_value(usage, "totalTokens", "total_tokens"),
+                                latency_value(metrics),
                                 sha256_file(raw_path),
                                 sha256_file(pred_path),
                             ]
@@ -1585,6 +2010,12 @@ def run_pipeline(
                                     bool(predicted.get(field, False)),
                                     bool(case["ground_truth"][field]),
                                     matches[field],
+                                    classify_field_result(
+                                        bool(predicted.get(field, False)),
+                                        bool(case["ground_truth"][field]),
+                                        field in scored_field_set,
+                                        field_evidence,
+                                    ),
                                     " | ".join(field_evidence["positive_hits"]),
                                     " | ".join(field_evidence["negative_hits"]),
                                     " | ".join(field_evidence["positive_patterns"]),

@@ -54,6 +54,39 @@ CLAIM_TYPE_RULES: Dict[str, List[str]] = {
     ],
 }
 
+STOP_WORDS = {
+    "a",
+    "an",
+    "and",
+    "are",
+    "as",
+    "at",
+    "based",
+    "be",
+    "by",
+    "can",
+    "does",
+    "for",
+    "from",
+    "has",
+    "have",
+    "in",
+    "is",
+    "it",
+    "of",
+    "on",
+    "or",
+    "student",
+    "the",
+    "this",
+    "to",
+    "with",
+}
+
+ABSTENTION_WORDS_RE = re.compile(
+    r"\b(cannot determine|not specified|not stated|not documented|not included|unclear|unknown)\b"
+)
+
 
 @dataclass
 class Claim:
@@ -62,6 +95,10 @@ class Claim:
     normalized_text: str
     claim_type: str
     source_unit_index: int
+    support_status: str = "not_checked"
+    support_reason: str = "document evidence check was not run"
+    support_evidence: str = ""
+    support_score: float = 0.0
 
     def to_dict(self) -> Dict[str, object]:
         return asdict(self)
@@ -155,7 +192,107 @@ def summarize_claim_types(claims: List[Dict[str, object]]) -> Dict[str, int]:
     return dict(sorted(counts.items(), key=lambda item: item[0]))
 
 
-def build_claim_breakdown(raw_response: str, prefix: str = "claim") -> Dict[str, object]:
+def _keywords(text: str) -> List[str]:
+    words = re.findall(r"[a-z0-9][a-z0-9:-]{2,}", normalize_claim_text(text).lower())
+    cleaned = []
+    seen = set()
+    for word in words:
+        if word in STOP_WORDS:
+            continue
+        if word.endswith("s") and len(word) > 4:
+            word = word[:-1]
+        if word not in seen:
+            seen.add(word)
+            cleaned.append(word)
+    return cleaned
+
+
+def _source_units(document_text: str) -> List[str]:
+    units = []
+    for line in normalize_claim_text(document_text).splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        parts = re.split(r"\s+\|\|\s+|\s+\|\s+", line)
+        for part in parts:
+            part = part.strip()
+            if len(part.split()) >= 3:
+                units.append(part)
+    return units
+
+
+def check_claim_support(claim_text: str, document_text: str) -> Dict[str, object]:
+    claim = normalize_claim_text(claim_text)
+    source = normalize_claim_text(document_text)
+    lowered_claim = claim.lower()
+
+    if not claim:
+        return {
+            "support_status": "unclear",
+            "support_reason": "empty claim",
+            "support_evidence": "",
+            "support_score": 0.0,
+        }
+
+    if ABSTENTION_WORDS_RE.search(lowered_claim):
+        return {
+            "support_status": "unclear",
+            "support_reason": "claim says the document does not specify something",
+            "support_evidence": "",
+            "support_score": 0.0,
+        }
+
+    if lowered_claim in source.lower():
+        return {
+            "support_status": "supported",
+            "support_reason": "exact text appears in cleaned document text",
+            "support_evidence": claim,
+            "support_score": 1.0,
+        }
+
+    claim_words = _keywords(claim)
+    if not claim_words:
+        return {
+            "support_status": "unclear",
+            "support_reason": "not enough claim keywords to check",
+            "support_evidence": "",
+            "support_score": 0.0,
+        }
+
+    best_unit = ""
+    best_score = 0.0
+    best_overlap_count = 0
+
+    for unit in _source_units(source):
+        unit_words = set(_keywords(unit))
+        if not unit_words:
+            continue
+        overlap_count = sum(1 for word in claim_words if word in unit_words)
+        score = overlap_count / max(len(claim_words), 1)
+        if score > best_score:
+            best_score = score
+            best_overlap_count = overlap_count
+            best_unit = unit
+
+    if best_score >= 0.55 and best_overlap_count >= 3:
+        status = "supported"
+        reason = "enough claim keywords match one source text unit"
+    elif best_score >= 0.30 and best_overlap_count >= 2:
+        status = "unclear"
+        reason = "some source keywords match, but not enough for a clean support call"
+    else:
+        status = "unsupported"
+        reason = "no close source text match found"
+
+    return {
+        "support_status": status,
+        "support_reason": reason,
+        "support_evidence": best_unit,
+        "support_score": round(best_score, 3),
+    }
+
+
+def build_claim_breakdown(raw_response: str, prefix: str = "claim", document_text: str = "") -> Dict[str, object]:
     units = split_candidate_units(raw_response)
     claims: List[Dict[str, object]] = []
     unit_rows: List[Dict[str, object]] = []
@@ -170,6 +307,16 @@ def build_claim_breakdown(raw_response: str, prefix: str = "claim") -> Dict[str,
             kept_count += 1
             claim_id = f"{prefix}_{kept_count:03d}"
             claim_type = classify_claim_type(unit)
+            support = (
+                check_claim_support(unit, document_text)
+                if document_text
+                else {
+                    "support_status": "not_checked",
+                    "support_reason": "document text was not provided",
+                    "support_evidence": "",
+                    "support_score": 0.0,
+                }
+            )
             claims.append(
                 Claim(
                     claim_id=claim_id,
@@ -177,6 +324,7 @@ def build_claim_breakdown(raw_response: str, prefix: str = "claim") -> Dict[str,
                     normalized_text=normalize_claim_text(unit).lower(),
                     claim_type=claim_type,
                     source_unit_index=index,
+                    **support,
                 ).to_dict()
             )
 
@@ -191,14 +339,20 @@ def build_claim_breakdown(raw_response: str, prefix: str = "claim") -> Dict[str,
             ).to_dict()
         )
 
+    support_counts: Dict[str, int] = {}
+    for claim in claims:
+        status = str(claim.get("support_status", "not_checked"))
+        support_counts[status] = support_counts.get(status, 0) + 1
+
     return {
         "source_unit_count": len(units),
         "claim_count": len(claims),
         "claims_by_type": summarize_claim_types(claims),
+        "claim_support_counts": dict(sorted(support_counts.items())),
         "units": unit_rows,
         "claims": claims,
     }
 
 
-def extract_claims(raw_response: str, prefix: str = "claim") -> List[Dict[str, object]]:
-    return build_claim_breakdown(raw_response, prefix)["claims"]
+def extract_claims(raw_response: str, prefix: str = "claim", document_text: str = "") -> List[Dict[str, object]]:
+    return build_claim_breakdown(raw_response, prefix, document_text=document_text)["claims"]

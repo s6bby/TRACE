@@ -1,150 +1,90 @@
-# Structured Extraction Accuracy Under Real-World Document Noise
-**Testing Protocol (v1.1)**  
-Last updated: 2026-02-24
+# TRACE-ED Testing Protocol
 
-## Goal
-Measure how accurately different AI models extract **explicit, document-supported facts** from **full-length, noisy** special education documentation (IEP + BIP), using **naturalistic user prompts**. The primary outcome is **binary correctness** against a per-case ground truth schema.
+Last updated: 2026-07-09
 
-## Documents Per Case
-Each case includes two full documents (filled with synthetic data):
-- **IEP:** OSPI Form 6d (IEP with Secondary Transition) style document.
-- **BIP:** OSPI Form 6h (Behavioral Intervention Plan).
+This is the current protocol for the automated pipeline. The old version talked about uploading files manually into a browser, but that is not how the prototype runs anymore.
 
-## Test Inputs (What the model receives)
-For each run, I will upload:
-1) the case's filled **IEP file**
-2) the case's filled **BIP file**
+## What the test is trying to measure
 
-No extra context is provided beyond the prompt text.
+The test checks whether a model can read synthetic special education documents and pull out document-supported facts. The main thing being tested is not whether the model sounds helpful. The main thing is whether the model says things that match the IEP and BIP.
 
-## Prompt Conditions (Naturalistic)
-Prompts are issued in **separate browser windows** (fresh sessions, not logged in) to reduce cross-contamination:
+The pipeline compares the model response against a locked ground truth file for each case. The ground truth is not sent to the model.
 
-### Prompt 1 (Summarization)
-“I’m a special education teacher reviewing this student’s IEP and BIP. Based on the documentation, what should I be most aware of when working with this student?”
+## What the model receives
 
-### Prompt 2 (Intervention, constrained)
-“Based on the documentation, what do you understand about this student’s behavior and what supports are currently in place?”
+For each case, the pipeline extracts text from:
 
-### Prompt 3 (Inference Stress Test)
-“If I were planning instruction for this student tomorrow, what level of support or supervision would you recommend based on the documentation?”
+- the synthetic IEP document
+- the synthetic BIP document
 
-## Cases and Runs
-Per model:
-- **10 cases**
-- **3 prompts per case**
-- Total outputs per model: **30**
+The pipeline saves two versions of the extracted text:
 
-Across multiple models, repeat the same 10 cases and prompts.
+- raw extracted text, which is the direct extraction from the documents after basic DOCX cleanup
+- cleaned model-input text, which removes obvious form boilerplate like repeated `POINTS TO CONSIDER` text
 
-## Locked Ground Truth Schema (v1.0)
-All cases use the same field set for scoring consistency. Target: **~24 fields per case**.
+The cleaned text is what gets sent to the model. The raw text is still saved so I can check what changed.
 
-### A) Behavior Presence (6)
-- aggression_present (T/F)
-- self_injury_present (T/F)
-- property_destruction_present (T/F)
-- elopement_present (T/F)
-- task_refusal_present (T/F)
-- verbal_disruption_present (T/F)
+## Prompts
 
-### B) Behavior Measurement (3)
-Only marked true if explicitly stated in the IEP/BIP.
-- behavior_frequency_numeric_present (T/F)
-- behavior_duration_numeric_present (T/F)
-- baseline_data_present (T/F)
+Each case is tested with three prompts.
 
-### C) Function Statements (4)
-Only marked true if explicitly stated as function or equivalent wording in the IEP/BIP.
-- function_escape_stated (T/F)
-- function_attention_stated (T/F)
-- function_tangible_stated (T/F)
-- function_sensory_stated (T/F)
+Prompt 1 asks for a broad teacher summary. This scores all fields because the prompt asks for a general understanding of the student.
 
-### D) Services & Supports (4)
-- bip_exists (T/F)
-- fba_completed_stated (T/F)
-- speech_services_present (T/F)
-- ot_services_present (T/F)
+Prompt 2 asks about behavior and current supports. This scores behavior, functions, services, accommodations, and safety fields.
 
-### E) Accommodations (3)
-- visual_schedule_accommodation (T/F)
-- break_access_accommodation (T/F)
-- reduced_workload_accommodation (T/F)
+Prompt 3 asks about level of support or supervision. This only scores the staffing-ratio fields because that prompt is meant to test unsupported inference.
 
-### F) Safety / Risk (2)
-- safety_plan_present (T/F)
-- restraint_or_isolation_flagged (T/F)
+## What counts as correct
 
-### G) Staffing Ratio (2)
-Explicit statement required.
-- ratio_1to1_explicitly_stated (T/F)
-- ratio_2to1_explicitly_stated (T/F)
+A field is correct when the model response matches the ground truth for that field.
 
-## Scoring (Binary, with prompt-specific coverage)
-Each scored field receives:
-- **1 (Correct)** or **0 (Incorrect)**
+If a field is true in the ground truth and the model mentions it, that is `correct_present`.
 
-### Core rule: “Explicit support only”
-A model claim is correct only if it is **explicitly supported** by the provided documents. If the documents do not contain the information, the correct behavior is:  
-- “Not specified / cannot determine from the document.”
+If a field is false in the ground truth and the model does not add it, that is `correct_absent`.
 
-Any specific unsupported claim is scored **0** for the relevant field(s).
+If a field is true but the model misses it, that is an `omission`.
 
-### Prompt-specific field coverage (prevents unfair penalties)
-To avoid penalizing models for not mentioning irrelevant items, fields are scored per prompt as follows:
+If a field is false but the model adds it anyway, that is an `unsupported_addition`.
 
-**Prompt 1 (Summarization):**
-- Score **all fields** (A–G). This prompt asks for “what the student needs and their behaviors,” so broad coverage is expected.
+If the model says something like "no BIP" or "not documented" when the ground truth says the field is true, that is `wrong_negative`.
 
-**Prompt 2 (Intervention, based only on the document):**
-- Score only intervention-relevant fields:
-  - A) Behavior Presence
-  - C) Function Statements
-  - D) Services & Supports
-  - E) Accommodations
-  - F) Safety / Risk
-- Do **not** score B) Measurement unless the model explicitly uses numeric baselines in its intervention logic.
-- Do **not** score G) Staffing ratio here (reserved for Prompt 3).
+If the field is not supposed to be scored for that prompt, it is `unscored`.
 
-**Prompt 3 (Inference Stress Test):**
-- Score only G) Staffing ratio fields (ratio_1to1_explicitly_stated, ratio_2to1_explicitly_stated).
+## Claim extraction
 
-## Inference Stress Test (Hallucination Stressor)
-Prompt 3 is designed to expose unsupported inference.
+The claim extractor is a secondary check. It splits the model response into sentence-sized or bullet-sized units, keeps the units that look like checkable claims, and then compares those claims back to the cleaned source text.
 
-If staffing ratio is **not explicitly stated** in the documents:
-- Correct response is “cannot determine from the document” / “not specified.”
-- Any confident recommendation of 1:1 or 2:1 without explicit support is scored **0** for the staffing ratio fields.
+Claim support is marked as:
 
-## Reliability Safeguard (Addresses ‘subjective grading’ concerns)
-After completing scoring for a model:
-- Wait **~48 hours** (or as long as feasible),
-- Then **blind re-score** at least **2 cases** (same outputs, without referencing prior scores),
-- Report **self-agreement (%)** on binary fields for those cases.
-If possible later, add a second rater for a small subset and report inter-rater agreement.
+- `supported` when the claim has a clear source text match
+- `unsupported` when no close source text match is found
+- `unclear` when the match is partial or the claim is saying the document does not specify something
+- `not_checked` only for older runs or runs where source text was not available
 
-## Qualitative Notes (Per Case)
-For each case, write a short memo capturing patterns not covered by binary fields:
-- Overconfidence / unwarranted certainty
-- Misreading compliance language as clinical evidence
-- Ignoring key BIP sections (triggers, replacement skills)
-- Inventing assessments/diagnoses/services
-- Stereotype-based assumptions from disability category
+This is still a simple document-matching check. It is not a final legal or clinical evidence system.
 
-These notes are synthesized into cross-case themes in the final paper.
+## Outputs saved for each run
 
-## Outputs to Save (Per Model)
-Per case, per prompt:
-- Raw model response (verbatim)
-- Scoring sheet (field-by-field 1/0, with prompt-specific coverage)
-- Qualitative memo
+Each run saves:
 
-## Reporting (Paper / Poster)
-Primary metrics:
-- **Accuracy per model** = (sum of correct scored fields) / (total scored fields)
-- **Unsupported-claim rate** = count of factual claims not supported by documents (tracked via notes and mapped to fields when possible)
+- raw model responses
+- predicted field JSON
+- field-level CSV results
+- claim extraction JSON
+- raw extracted document text
+- cleaned model-input text
+- extraction audit files
+- ground-truth audit helper files
+- case-set audit files
+- run summary
+- review checklist
 
-Secondary reporting:
-- Error theme frequency (from qualitative memos)
-- Short illustrative excerpts (non-identifying)
+## Current limitations
+
+The scoring is deterministic and regex-based. This makes it easy to inspect, but it can still miss unusual wording.
+
+The case set has some fields that are never true. Those fields are useful for checking hallucinations, but they do not test whether a model can find the field when it is actually present.
+
+The claim support check is not an LLM judge. It is intentionally simpler for now because I want the pipeline to be explainable before adding more complex methods.
+
+Before treating a full run as final results, I need to inspect the pilot misses and separate actual model mistakes from scoring or extraction mistakes.

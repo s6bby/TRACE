@@ -2,6 +2,7 @@ from pathlib import Path
 
 from surca_research_pipeline.src.claims.claim_extractor import (
     build_claim_breakdown,
+    check_claim_support,
     classify_claim_type,
     extract_claims,
     looks_like_claim,
@@ -54,6 +55,36 @@ def test_build_claim_breakdown_keeps_units_and_claim_counts():
     assert breakdown["claims_by_type"]["behavior"] >= 1
     assert breakdown["claims_by_type"]["service"] >= 1
     assert any(claim["claim_id"] == "broad_001" for claim in breakdown["claims"])
+    assert breakdown["claim_support_counts"]["not_checked"] == breakdown["claim_count"]
+
+
+def test_claim_support_marks_supported_and_unsupported_claims():
+    document_text = (
+        "The student shows aggression during transitions.\n"
+        "The BIP is in place.\n"
+        "OT services are provided weekly."
+    )
+
+    supported = check_claim_support("The BIP is in place.", document_text)
+    unsupported = check_claim_support("A 2:1 staffing ratio is required.", document_text)
+
+    assert supported["support_status"] == "supported"
+    assert unsupported["support_status"] in {"unsupported", "unclear"}
+
+
+def test_claim_breakdown_can_save_document_support_status():
+    document_text = (
+        "The student shows aggression during transitions.\n"
+        "The BIP is in place.\n"
+        "OT services are provided weekly."
+    )
+    response = "The BIP is in place. A 2:1 staffing ratio is required."
+
+    breakdown = build_claim_breakdown(response, prefix="support", document_text=document_text)
+    statuses = {claim["source_text"]: claim["support_status"] for claim in breakdown["claims"]}
+
+    assert statuses["The BIP is in place."] == "supported"
+    assert "not_checked" not in breakdown["claim_support_counts"]
 
 
 def test_classify_claim_type_prefers_simple_domain_types():
