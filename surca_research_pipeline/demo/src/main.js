@@ -131,7 +131,10 @@ function renderClaimUnitRows(result) {
 
 function renderRunOptions() {
   return data.runs
-    .map((run, index) => `<option value="${index}">${escapeHtml(run.run_id)}</option>`)
+    .map((run, index) => {
+      const provider = run.provider || 'unknown'
+      return `<option value="${index}">${escapeHtml(provider)} | ${escapeHtml(run.run_id)}</option>`
+    })
     .join('')
 }
 
@@ -196,6 +199,7 @@ function render() {
         </div>
         <div class="header-meta">
           <span>Runs: ${data.runs.length}</span>
+          <span>Export: ${escapeHtml(data.export_provider || 'all')}</span>
           <span>Generated: ${escapeHtml(data.generated_at_utc || 'local sample')}</span>
         </div>
       </section>
@@ -219,6 +223,10 @@ function render() {
           <div class="metric-card">
             <span class="metric-label">Run ID</span>
             <span class="metric-text">${escapeHtml(run.run_id)}</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Provider</span>
+            <span class="metric-text">${escapeHtml(run.provider || 'unknown')}</span>
           </div>
           <div class="metric-card">
             <span class="metric-label">Evaluations</span>

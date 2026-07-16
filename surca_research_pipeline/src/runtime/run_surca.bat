@@ -56,6 +56,7 @@ if not defined RUN_ID if defined PILOT_RUN_ID set "RUN_ID=%PILOT_RUN_ID%"
 if not defined RUN_ID set "RUN_ID=trace_ed_run_01"
 if not defined PROVIDER set "PROVIDER=lmstudio"
 if not defined AWS_REGION set "AWS_REGION=us-east-2"
+if not defined DEMO_MIN_EVALUATIONS set "DEMO_MIN_EVALUATIONS=0"
 if defined RUN_ID_OVERRIDE set "RUN_ID=%RUN_ID_OVERRIDE%"
 
 if /I "%ACTION%"=="verify" goto verify
@@ -123,13 +124,14 @@ if defined RUN_CASES (
 )
 if errorlevel 1 exit /b 1
 
-call :pipeline --mode export-demo --base-dir "%BASE_DIR%"
+call :pipeline --mode export-demo --base-dir "%BASE_DIR%" --export-provider "%PROVIDER%" --export-min-evaluations "%DEMO_MIN_EVALUATIONS%"
 if errorlevel 1 exit /b 1
 
 echo.
 echo TRACE-ED run completed.
 echo Run ID: %SELECTED_RUN_ID%
-echo Demo data exported.
+echo Demo data exported for provider: %PROVIDER%
+echo Demo minimum evaluations: %DEMO_MIN_EVALUATIONS%
 exit /b 0
 
 :demo

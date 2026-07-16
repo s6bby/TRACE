@@ -15,6 +15,15 @@ Change:
 - `model`
 - `run_cases`
 - `run_id`
+- `demo_min_evaluations`
+
+Use run ids that say where the result came from:
+
+```text
+aws_nova_micro_cases001_003
+aws_nova_lite_cases001_003
+local_gemma_cases001_003
+```
 
 First-time setup:
 
@@ -75,6 +84,10 @@ Run the configured test batch:
 ```bat
 surca_research_pipeline\src\runtime\run_surca.bat run
 ```
+
+After a run finishes, the demo export only includes the provider you just used.
+For example, a Bedrock run exports Bedrock runs only, not old LM Studio runs.
+Set `demo_min_evaluations` to `30` when you only want full 10-case runs in the demo.
 
 Output folders:
 

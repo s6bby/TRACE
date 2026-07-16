@@ -1296,6 +1296,15 @@ def parse_optional_bool(value: Any) -> Optional[bool]:
     return lowered in {"true", "1", "yes"}
 
 
+def safe_int(value: Any) -> int:
+    try:
+        if str(value).strip() == "":
+            return 0
+        return int(float(value))
+    except Exception:
+        return 0
+
+
 def load_csv_rows(path: Path) -> List[Dict[str, str]]:
     if not path.exists():
         return []
@@ -1724,9 +1733,30 @@ def build_demo_run_payload(run_dir: Path) -> Dict[str, Any]:
     }
 
 
-def export_demo_data(base_dir: Path) -> Tuple[Path, int]:
+def demo_run_is_exportable(run_dir: Path, min_evaluations: int) -> bool:
+    manifest = load_json_file(run_dir / "run_manifest.json")
+    if manifest and manifest.get("status") != "completed":
+        return False
+
+    if min_evaluations > 0:
+        metrics = load_json_file(run_dir / REPORT_JSON_NAME)
+        if safe_int(metrics.get("total_evaluations", 0)) < min_evaluations:
+            return False
+
+    return True
+
+
+def export_demo_data(base_dir: Path, export_provider: str = "all", min_evaluations: int = 0) -> Tuple[Path, int]:
+    normalized_export_provider = export_provider.strip().lower()
+    if normalized_export_provider != "all":
+        normalized_export_provider = normalize_provider(normalized_export_provider)
+
+    run_groups = [DEFAULT_RUN_GROUP, BEDROCK_RUN_GROUP]
+    if normalized_export_provider != "all":
+        run_groups = [run_group_for_provider(normalized_export_provider)]
+
     run_dirs = []
-    for run_group in [DEFAULT_RUN_GROUP, BEDROCK_RUN_GROUP]:
+    for run_group in run_groups:
         runs_root = base_dir / "outputs" / run_group
         if runs_root.exists():
             run_dirs.extend([path for path in runs_root.iterdir() if path.is_dir()])
@@ -1734,7 +1764,13 @@ def export_demo_data(base_dir: Path) -> Tuple[Path, int]:
 
     payload = {
         "generated_at_utc": datetime.utcnow().isoformat(),
-        "runs": [build_demo_run_payload(run_dir) for run_dir in run_dirs if (run_dir / "results.csv").exists()],
+        "export_provider": normalized_export_provider,
+        "min_evaluations": min_evaluations,
+        "runs": [
+            build_demo_run_payload(run_dir)
+            for run_dir in run_dirs
+            if (run_dir / "results.csv").exists() and demo_run_is_exportable(run_dir, min_evaluations)
+        ],
     }
 
     export_path = Path(__file__).resolve().parents[2] / "demo" / "src" / "generated" / DEMO_EXPORT_NAME
@@ -2065,6 +2101,19 @@ def parse_args():
     parser.add_argument("--run-id", type=str, default="", help="optional name for the run folder")
     parser.add_argument("--overwrite-run", action="store_true", help="overwrite an existing run folder with the same run id")
     parser.add_argument(
+        "--export-provider",
+        type=str,
+        default="all",
+        choices=["all", *sorted(SUPPORTED_PROVIDERS)],
+        help="provider runs to include when exporting demo data",
+    )
+    parser.add_argument(
+        "--export-min-evaluations",
+        type=int,
+        default=0,
+        help="minimum result rows a run must have before it is included in demo export",
+    )
+    parser.add_argument(
         "--mode",
         type=str,
         default="run",
@@ -2093,8 +2142,10 @@ def main():
         return
 
     if args.mode == "export-demo":
-        export_path, run_count = export_demo_data(base_dir)
+        export_path, run_count = export_demo_data(base_dir, args.export_provider, args.export_min_evaluations)
         print(f"demo export ready: {export_path}")
+        print(f"export provider: {args.export_provider}")
+        print(f"minimum evaluations: {args.export_min_evaluations}")
         print(f"exported runs: {run_count}")
         return
 

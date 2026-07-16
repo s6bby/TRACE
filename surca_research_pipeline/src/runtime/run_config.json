@@ -6,9 +6,10 @@
   "base_url": "http://127.0.0.1:1234",
   "aws_region": "us-east-2",
   "aws_profile": "",
-  "model": "us.amazon.nova-micro-v1:0",
-  "run_cases": "CASE001",
-  "run_id": "aws_nova_micro_smoke_01",
+  "model": "openai.gpt-oss-20b-1:0",
+  "run_cases": "",
+  "run_id": "aws_gpt_oss_20b_full10_v1",
+  "demo_min_evaluations": 30,
   "npm_cmd": "C:\\Program Files\\nodejs\\npm.cmd",
   "demo_dir": ".\\surca_research_pipeline\\demo"
 }
